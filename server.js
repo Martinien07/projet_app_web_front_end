@@ -2,6 +2,12 @@ import express from 'express';
 import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+
+
+
 import database from './config/connection.js';
 import userRoutes from './routes/userRoutes.js';
 import assignmentRoutes from './routes/assignmentRoutes.js';
@@ -12,6 +18,12 @@ import incidentRoutes from './routes/incidentRoutes.js';
 import inspectionRoutes from './routes/inspectionRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
+
+
+// Définir __dirname en mode ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 
 // console.log("Lancement du serveur...",dotenv.config());
@@ -27,14 +39,24 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 
+
+
+//Utilisation de ejs comme moteur de rendu
+app.set('view engine', 'ejs');
+app.set('views', './views');
+// Servir les fichiers statiques depuis le dossier assets
+app.use('/assets', express.static(path.join(__dirname, './views/assets')));
+
+
+
+
 //Creation des tables
 //database.sync({ alter: true })
 
 
 //Route de test
 app.get('/', (req, res) => {
-    res.json({ message: 'Bienvenue sur notre API!' });
+    res.render('index')
 });
 
 //Route pour les utilisateurs à partir de userRoutes.js
