@@ -1,0 +1,1825 @@
+{
+	"info": {
+		"_postman_id": "3f45496a-416e-45ca-a7c7-3c1ce457251d",
+		"name": "projet_app_web",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49734760",
+		"_collection_link": "https://adekplovikokouetonam-362267.postman.co/workspace/kokou-etonam01-adekplovi's-Work~ba4c0fb3-b32b-45d8-8d69-930134aed3cd/collection/49734760-3f45496a-416e-45ca-a7c7-3c1ce457251d?action=share&source=collection_link&creator=49734760"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Tous les utilisateurs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3Njc2OTYsImV4cCI6MTc2NDQ4NzY5Nn0.R2SNrcSeKby7tXnvj71ziKoN4OYMAsU39ckCkE7di4E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjE4NjgzLCJleHAiOjE3NjM2MjIyODN9.0xbqNTX9ynCPzdrgwpLhgAcY930VnqKgicleyD9RAN4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"guy-flaubert\",\n    \"email\":\"gyu@gmail.com\",\n    \"password\":\"password1234\",\n    \"phone\":\"22899558877\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Utilisateur par id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3NjQzODgsImV4cCI6MTc2NDQ4NDM4OH0.ZcmoMFYwTKjRHXokkWguUdQ2wPrRA6QEOfqhfCZVE3M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/users/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifier un utilisateur",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImVtYWlsIjoiamVhbkBnbWFpbC5jb20iLCJhY2Nlc3MiOjAsImlhdCI6MTc2Mzc3NzM3MSwiZXhwIjoxNzY0NDk3MzcxfQ.gQl-akTQUdvSqD5JxBiD2u2eSLBaw8TxgBw2uBJJPoY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImVtYWlsIjoiamVhbkBnbWFpbC5jb20iLCJhY2Nlc3MiOjAsImlhdCI6MTc2Mzc3NzM3MSwiZXhwIjoxNzY0NDk3MzcxfQ.gQl-akTQUdvSqD5JxBiD2u2eSLBaw8TxgBw2uBJJPoY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"34558942563\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "16"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer un utilisateur",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/users/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "role",
+			"item": [
+				{
+					"name": "Tous les roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3Njc2OTYsImV4cCI6MTc2NDQ4NzY5Nn0.R2SNrcSeKby7tXnvj71ziKoN4OYMAsU39ckCkE7di4E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/role",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"role"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjg3Mzc5LCJleHAiOjE3NjQ0MDczNzl9.-CVtOenikN1QQU7lG9aVKXrrDK1rS51iTfQyuw59i2Y",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"name\": \"ouvrier\",\n    \"description\": \"Personne qui travaille sur le chantier\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/role",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"role"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "afficher role en fonction de id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3NjQzODgsImV4cCI6MTc2NDQ4NDM4OH0.ZcmoMFYwTKjRHXokkWguUdQ2wPrRA6QEOfqhfCZVE3M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/role/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"role",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifier un role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3NjQzODgsImV4cCI6MTc2NDQ4NDM4OH0.ZcmoMFYwTKjRHXokkWguUdQ2wPrRA6QEOfqhfCZVE3M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Personne qui travaille sur le chantier\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/role/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"role",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer un role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/role/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"role",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inspections",
+			"item": [
+				{
+					"name": "Toutes les inspections",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzMjY5LCJleHAiOjE3NjM2NDY4Njl9.kT40wV8whf71UahRxzNSmp1-Qn3vbP6GIB1-nq-I9Ig",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/inspection",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"inspection"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter inspection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chantierId\": 1,\n    \"inspectorId\": 1,\n    \"date\": \"2024-01-17\",\n    \"status\": \"en_attente\",\n    \"observation\": \"Inspection partielle réalisée, besoin de vérifications complémentaires\",\n    \"recommendations\": \"Revoir la documentation technique et réaliser un second contrôle\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/inspection",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"inspection"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "afficher inspection en fonction de id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImVtYWlsIjoiamVhbkBnbWFpbC5jb20iLCJhY2Nlc3MiOjAsImlhdCI6MTc2MzY2NzE5OCwiZXhwIjoxNzY0Mzg3MTk4fQ.VlnOq2YuN2Gg3IMdXfpUY_ILUTju8bznC0OSh6VESeU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/inspection/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"inspection",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifier une inspection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImVtYWlsIjoiamVhbkBnbWFpbC5jb20iLCJhY2Nlc3MiOjAsImlhdCI6MTc2MzY2NzE5OCwiZXhwIjoxNzY0Mzg3MTk4fQ.VlnOq2YuN2Gg3IMdXfpUY_ILUTju8bznC0OSh6VESeU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"observation\": \"Inspection partielle réalisée, besoin de vérifications complémentaires\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/inspection/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"inspection",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer une inspection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/inspection/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"inspection",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notification",
+			"item": [
+				{
+					"name": "obtenir les notifications en fonction des critères",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiZ3l1QGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjkwNDA2LCJleHAiOjE3NjQ0MTA0MDZ9.AjeHj-3Mq_JzQ7vKfGsjVs3ui3rTLRtBC9BobVdqO4o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiZ3l1QGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjkwNDA2LCJleHAiOjE3NjQ0MTA0MDZ9.AjeHj-3Mq_JzQ7vKfGsjVs3ui3rTLRtBC9BobVdqO4o",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/notification?target=15&scope=global&level=all&isRead=false",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"notification"
+							],
+							"query": [
+								{
+									"key": "target",
+									"value": "15"
+								},
+								{
+									"key": "scope",
+									"value": "global"
+								},
+								{
+									"key": "level",
+									"value": "all"
+								},
+								{
+									"key": "isRead",
+									"value": "false"
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter une notification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiZ3l1QGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjgyMTEzLCJleHAiOjE3NjQ0MDIxMTN9.2drjCFZf9IXwlmkgFFXP8YUk-wKyNj37Jrt0_uiaeN8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"senderId\": 15,\n    \"title\": \"Réunion chantier\",\n    \"message\": \"Réunion importante demain à 9h\",\n    \"scope\": \"chantier\",\n    \"level\": \"all\",\n    \"target\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/notification",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"notification"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "afficher notification en fonction de id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiZ3l1QGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjkwNDA2LCJleHAiOjE3NjQ0MTA0MDZ9.AjeHj-3Mq_JzQ7vKfGsjVs3ui3rTLRtBC9BobVdqO4o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/notification/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"notification",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "marquer une notification lue",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiZ3l1QGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjkwNDA2LCJleHAiOjE3NjQ0MTA0MDZ9.AjeHj-3Mq_JzQ7vKfGsjVs3ui3rTLRtBC9BobVdqO4o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Personne qui est à la gestion des ouvriers sur le chantier\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/notification/read/:notificationId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"notification",
+								"read",
+								":notificationId"
+							],
+							"variable": [
+								{
+									"key": "notificationId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer une notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiZ3l1QGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjkwNDA2LCJleHAiOjE3NjQ0MTA0MDZ9.AjeHj-3Mq_JzQ7vKfGsjVs3ui3rTLRtBC9BobVdqO4o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/notification/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"notification",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chantier",
+			"item": [
+				{
+					"name": "Tous les chantiers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3NjQzODgsImV4cCI6MTc2NDQ4NDM4OH0.ZcmoMFYwTKjRHXokkWguUdQ2wPrRA6QEOfqhfCZVE3M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzMjY5LCJleHAiOjE3NjM2NDY4Njl9.kT40wV8whf71UahRxzNSmp1-Qn3vbP6GIB1-nq-I9Ig",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/chantiers",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"chantiers"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter un chantier",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjg3Mzc5LCJleHAiOjE3NjQ0MDczNzl9.-CVtOenikN1QQU7lG9aVKXrrDK1rS51iTfQyuw59i2Y",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Chantier Bastium Seto\",\n    \"location\": \"Rue Seto \",\n    \"description\": \"Construction complète d'un immeuble appartement\",\n    \"startDate\": \"2024-01-15T08:00:00.000Z\",\n    \"endDate\": \"2028-06-30T17:00:00.000Z\",\n    \"status\": \"en_cours\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/chantiers/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"chantiers",
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "afficher chantier en fonction de id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJneXVAZ21haWwuY29tIiwiYWNjZXNzIjowLCJpYXQiOjE3NjM3Njc2OTYsImV4cCI6MTc2NDQ4NzY5Nn0.R2SNrcSeKby7tXnvj71ziKoN4OYMAsU39ckCkE7di4E",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/chantiers/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"chantiers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifier un chantier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Chantier Centre ville Paris\",\r\n    \"status\": \"en_arret\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/chantiers/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"chantiers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer un chantier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/role/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"role",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "assignment",
+			"item": [
+				{
+					"name": "Tous les assignments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/assignment",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"assignment"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter un assignement",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjg3Mzc5LCJleHAiOjE3NjQ0MDczNzl9.-CVtOenikN1QQU7lG9aVKXrrDK1rS51iTfQyuw59i2Y",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\":2,\n    \"chantierId\":1,\n    \"roleId\":1,\n    \"assignedAt\":\"2024-10-01T10:00:00Z\",\n    \"isActive\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/assignment",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"assignment"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "afficher assignment en fonction de id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/assignment/:userId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"assignment",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifier un assignment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjU5NjM2LCJleHAiOjE3NjQzNzk2MzZ9.GEZKiwDPdrCW56C_cGl7bda5iUgaNZNuNFzycr1NGZ0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"isActive\":0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/assignment/:userId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"assignment",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer un assignment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzQzMjk1LCJleHAiOjE3NjMzNDY4OTV9.iDNRpAmlujNvtfUnLGDRq_zXPxOq6mPCCKKtvzikiec",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/assignment/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"assignment",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Incident",
+			"item": [
+				{
+					"name": "Tous les incidents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiamVhQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNjQzNjY0LCJleHAiOjE3NjQzNjM2NjR9.EyZkNbN-5pmDchnr9xXOoFACmML_9iIBjmHwZnsje-Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/incidents",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"incidents"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter un incident",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chantierId\":1,\n    \"title\": \"Matériel manquant\",\n    \"description\": \"Quelques outils non retournés à la fin du shift\",\n    \"severity\": \"mineur\",\n    \"status\": \"ouvert\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/incidents",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"incidents"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "afficher incident en fonction de id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/incidents/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"incidents",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifier un incidents",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzA3ODc0LCJleHAiOjE3NjMzMTE0NzR9.X3xd2KEXVlnwzcz1T4b9Hi5N9lOG1APh24BZ9sQ5fqM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"isActive\":0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/incidents/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"incidents",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supprimer un incidents",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzMzQzMjk1LCJleHAiOjE3NjMzNDY4OTV9.iDNRpAmlujNvtfUnLGDRq_zXPxOq6mPCCKKtvzikiec",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/incidents/:id",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"incidents",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "réinitialiser un password user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/admin/reset-password/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"reset-password",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "authentification",
+			"item": [
+				{
+					"name": "utilisateur change son password user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"email\":\"jean@gmail.com\",\r\n    \"password\":\"password1234\"\r\n\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/change-password/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"change-password",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJqZWFuQGdtYWlsLmNvbSIsImFjY2VzcyI6MCwiaWF0IjoxNzYzNzY5MTU4LCJleHAiOjE3NjQ0ODkxNTh9.lysWL397R0QaIt_IAcmjNcZ-PUqLyR3QDlMyYjDuA9M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"email\":\"jean@gmail.com\",\r\n    \"password\":\"password1234\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

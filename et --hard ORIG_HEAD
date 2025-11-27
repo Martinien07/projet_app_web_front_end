@@ -1,0 +1,264 @@
+[33mcommit 5a732a32c3d9c8d2154bd3d0e9ddc8e3f9f81938[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop2[m[33m, [m[1;32mdevelop[m[33m)[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Thu Nov 20 18:16:31 2025 -0500
+
+    test et correction globale
+
+[33mcommit bfc1e8a898886cdd4c4f23b0825d9ed5eaa98b65[m
+Author: GamaSpeed <franklingameni@gmail.com>
+Date:   Wed Nov 19 23:17:35 2025 -0500
+
+    update
+
+[33mcommit 442cc7b632c72fe602c3c37bce6e1b5600713d62[m
+Author: GamaSpeed <franklingameni@gmail.com>
+Date:   Wed Nov 19 22:39:39 2025 -0500
+
+    update
+
+[33mcommit a33ad33a9f181455ce3c3e013aebc43654495a93[m
+Merge: 66a6d2b c0929ac
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 21:20:11 2025 -0500
+
+    Merge pull request #5 from Martinien07/feature/notifications
+    
+    Feature/notifications
+
+[33mcommit c0929ac5391b021e1c25cbc82f304ca002d0b7fa[m
+Merge: 1b33168 66a6d2b
+Author: GamaSpeed <franklingameni@gmail.com>
+Date:   Wed Nov 19 21:16:48 2025 -0500
+
+    notifications merge
+
+[33mcommit 66a6d2ba5d041f03e9a8148ca0c26aa91d0c597a[m
+Merge: 70650c6 02e8265
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 21:00:51 2025 -0500
+
+    Merge pull request #7 from Martinien07/feature/Inspection
+    
+    Feature/inspection
+
+[33mcommit 02e8265180af2c1803e4887983fbacd8d1afb7c9[m
+Merge: 07cbe5e 70650c6
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 21:00:41 2025 -0500
+
+    Merge branch 'develop' into feature/Inspection
+
+[33mcommit 07cbe5e89d9ea1225cf60b6172c5ac52541d3749[m
+Author: BOMBOMA Gatigbene <2739871@collegelacite.ca>
+Date:   Wed Nov 19 20:56:32 2025 -0500
+
+    First commit
+
+[33mcommit 1b33168e3f1e6b75a8b7354939a7a91f98b4a433[m
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 20:38:03 2025 -0500
+
+    Delete models/relations.js
+
+[33mcommit 760b40a7def5c4d862fd120ba1835249429e3e38[m
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 20:37:47 2025 -0500
+
+    Delete server.js
+
+[33mcommit 70650c6495cf4404cd583856de861cd8f4e14979[m
+Merge: 82dea3a 4a53f80
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 20:21:47 2025 -0500
+
+    Merge pull request #1 from Martinien07/feature/chantier
+    
+    Feature/chantier
+
+[33mcommit 4a53f801c20d929e9923896d602f0b100edd5ff4[m
+Merge: 03aaca3 82dea3a
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 20:21:34 2025 -0500
+
+    Merge branch 'develop' into feature/chantier
+
+[33mcommit 82dea3a1a65012bd2d2f9af6d64d52e00cf6251b[m
+Merge: c8368be eec8b2c
+Author: GamaSpeed <128367683+GamaSpeed@users.noreply.github.com>
+Date:   Wed Nov 19 20:17:42 2025 -0500
+
+    Merge pull request #4 from Martinien07/feature/assignment
+    
+    Feature/assignment
+
+[33mcommit eec8b2c4ba2ed123f36c18e74638a3bafe7aa8f2[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Wed Nov 19 20:02:22 2025 -0500
+
+    verification et test
+
+[33mcommit dacab24029faf4629055d4c17735b9c4ccf6682c[m
+Merge: 6274693 f312a05
+Author: BOMBOMA Gatigbene <2739871@collegelacite.ca>
+Date:   Tue Nov 18 14:49:26 2025 -0500
+
+    Merge branch 'main' of https://github.com/Martinien07/projet_app_web
+
+[33mcommit 62746936f8e29f9df4ff890ac138554fcb297ba7[m
+Author: BOMBOMA Gatigbene <2739871@collegelacite.ca>
+Date:   Tue Nov 18 14:39:23 2025 -0500
+
+    First Commit
+
+[33mcommit 03aaca30a11f3f5adef2b19b4385001858ddd044[m
+Author: GamaSpeed <franklingameni@gmail.com>
+Date:   Sun Nov 16 19:53:52 2025 -0500
+
+    Incident commit
+
+[33mcommit 85b7511bb158e9862bb63d5c529f26de0a0b2277[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 19:53:40 2025 -0500
+
+    Mise a jour NotificationRecipient
+
+[33mcommit 294444c198ce0672556093e9e30263b1bc515ba2[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 19:39:19 2025 -0500
+
+    Mise a jour controllerNotification
+
+[33mcommit 9e1b44c60dc10aff94d02e5d08b65e5ea5053be1[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 19:35:34 2025 -0500
+
+    Mise a jour relations
+
+[33mcommit 3a09fccf112dd4068e710b6652b9f3c0227aac5a[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 19:32:25 2025 -0500
+
+    Mise a jour Notification model
+
+[33mcommit 97383f542cbbe4c12e08e58d45e0589a581d72c7[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 18:17:16 2025 -0500
+
+    Fix relations file name
+
+[33mcommit 384413baf0901d7cc044696c27b46d4d40edc8ea[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 18:13:17 2025 -0500
+
+    Fix relation Sequelize + add relations import
+
+[33mcommit 11555cb6982fc449435ef16e6b043de7e0115756[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 18:01:39 2025 -0500
+
+    Correction relations notifications
+
+[33mcommit dde91071357b162fbfa5523df5d6a53fa75c04be[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 17:21:43 2025 -0500
+
+    correction des import connection.js dans les modeles Notification
+
+[33mcommit 5ba68afcf72cadfdb9884d365359d8c601afa1a9[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 17:12:29 2025 -0500
+
+    Correction notificationController : ajout fin de fonction
+
+[33mcommit 8efc11c137f895616a48e878205547a0065ffe25[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 17:04:18 2025 -0500
+
+    Ajout notifications dans servers.js
+
+[33mcommit fda34bb814d5b8e1e84811750c8f064eb3d4bd18[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 17:00:22 2025 -0500
+
+    Ajout des routes notifications
+
+[33mcommit d212b8f3bfc4a034532c07decffb8b07517295a2[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 16:50:47 2025 -0500
+
+    Ajout du NotificationController
+
+[33mcommit 5b3715141a7074546349cf6340954c1890432df9[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 16:45:22 2025 -0500
+
+    Correction relation.js +ajout export
+
+[33mcommit 033be13e584ecf9e264fb2edefe2b37226f68562[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 16:43:50 2025 -0500
+
+    Renommage Notifications.js en Notification.js
+
+[33mcommit cd72eac5b6b834837b340bfa0449c9c2299c8bb3[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 16:29:42 2025 -0500
+
+    Ajout relations Notifications et NotificationRecipient
+
+[33mcommit 966051046192355451dd75adef3143a729a6918f[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 16:24:40 2025 -0500
+
+    Ajout modèle NotificationRecipient
+
+[33mcommit 4568cd20383ffde0e651a7663e49584f3937d10b[m
+Author: tareq <tareqouedraogo2@gmail.com>
+Date:   Sun Nov 16 16:18:21 2025 -0500
+
+    Ajout modèle Notifications
+
+[33mcommit 11c84b3c215fe2cfa90b3b1c12ec913e599dfc73[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Nov 16 14:08:04 2025 -0500
+
+    finalisation de la table assignment
+
+[33mcommit 18d293204f2522dd5236460c78df9a52633766eb[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Nov 16 13:00:40 2025 -0500
+
+    édition du controleur assignment
+
+[33mcommit 1c6be5f6b78304775f3f24beca340d65d5ee02d5[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Nov 16 12:32:39 2025 -0500
+
+    modele et relation de assignment avec user, role et chantier
+
+[33mcommit f312a0566d811f583f0149e1961590fe8d1b944e[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Nov 16 10:32:29 2025 -0500
+
+    Update project structure section in README
+    
+    Reorganized project structure section in README.md for clarity.
+
+[33mcommit cd9bdac91572cf1833592e1fc6e0f4b707d9c139[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Nov 16 10:31:10 2025 -0500
+
+    Fix formatting issues in README.md
+
+[33mcommit 2a14b67e69398716f8f1287b4c66966f3835f110[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Nov 16 10:30:00 2025 -0500
+
+    Revise README for project overview and details
+    
+    Updated project description, structure, features, database schema, installation instructions, and main endpoints in README.
+
+[33mcommit 51d3f0abdf5dcd629ca8f7c262a218d619cae6a5[m
+Merge: 95bd15a c8368be
+Author: GamaSpeed <franklingameni@gmail.com>
+Date:   Fri Nov 
