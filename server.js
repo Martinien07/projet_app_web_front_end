@@ -18,6 +18,8 @@ import incidentRoutes from './routes/incidentRoutes.js';
 import inspectionRoutes from './routes/inspectionRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
+import viewRoutes from "./routes/viewsRoutes.js";
+
 
 
 // Définir __dirname en mode ES module
@@ -33,7 +35,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 //Ajouter les middlewares a express
-app.use(helmet());
+app.use(helmet())
 app.use(cors());
 app.use(compression());
 app.use(express.json());
@@ -44,6 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 //Utilisation de ejs comme moteur de rendu
 app.set('view engine', 'ejs');
 app.set('views', './views');
+app.use("/", viewRoutes);
 // Servir les fichiers statiques depuis le dossier assets
 app.use('/assets', express.static(path.join(__dirname, './views/assets')));
 
