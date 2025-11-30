@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from "dotenv";
+dotenv.config();
 
 
 
@@ -19,6 +21,8 @@ import inspectionRoutes from './routes/inspectionRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
 import viewRoutes from "./routes/viewsRoutes.js";
+import session from "express-session";
+
 
 
 
@@ -43,6 +47,19 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        maxAge: 1000 * 60 * 60 * 24 // 24h
+    }
+}));
+
+
+
+
 //Utilisation de ejs comme moteur de rendu
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -56,6 +73,11 @@ app.use(express.static('public')) //Permet d'acceder aux fichiers statiques sans
 
 //Creation des tables
 //database.sync({ alter: true })
+
+
+//gestion des sessions utilisateurs
+
+
 
 
 //Route de test
@@ -80,7 +102,7 @@ app.use('/users', userRoutes);
 app.use('/api/notification', notificationRoutes);
 
 //Route pour l'authentification à partir de authRoutes.js
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 //Route pour les actions admin à partir de adminRoutes.js
 app.use('/api/admin', adminRoutes);

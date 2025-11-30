@@ -1,8 +1,10 @@
 import express from "express";
+import { isAuthenticated } from "../middlewares/authSession.js"
+import { error } from "console";
 const router = express.Router();
 
 //  Dashboard
-router.get("/", (req, res) => {
+router.get("/",isAuthenticated, (req, res) => {
     res.render("dashboard/index", {
         page: "dashboard",
         pageGroup: "dashboard"
@@ -11,7 +13,7 @@ router.get("/", (req, res) => {
 
 
 //  Erreur
-router.get("error/error-403", (req, res) => {
+router.get("/error/error-403", (req, res) => {
     res.render("error/error-403", {
         page: "error-403",
         pageGroup: "error",
@@ -22,7 +24,7 @@ router.get("error/error-403", (req, res) => {
 
 
 
-router.get("error/error-400", (req, res) => {
+router.get("/error/error-400", (req, res) => {
     res.render("error/error-400", {
         page: "error-400",
         pageGroup: "error",
@@ -33,7 +35,7 @@ router.get("error/error-400", (req, res) => {
 
 
 
-router.get("error/error-404", (req, res) => {
+router.get("/error/error-404", (req, res) => {
     res.render("error/error-404", {
         page: "error-404",
         pageGroup: "error",
@@ -43,7 +45,7 @@ router.get("error/error-404", (req, res) => {
 });
 
 
-router.get("error/error-500", (req, res) => {
+router.get("/error/error-500", (req, res) => {
     res.render("error/error-500", {
         page: "error-500",
         pageGroup: "error",
@@ -71,9 +73,22 @@ router.get("/register", (req, res) => {
 });
 
 
-router.get("auth/login", (req, res) => {
+router.get("/auth-forgot-password", (req, res) => {
+    res.render("auth/auth-forgot-password", {
+        page: "auth-forgot-password",
+        pageGroup: "Authentification",
+        title: "Changement de mot de passe"
+
+    });
+});
+
+
+
+
+router.get("/login", (req, res) => {
     res.render("auth/auth-login", {
         page: "auth-login",
+        error: "error",
         pageGroup: "Authentification",
         title: "Connexion utilisateur"
 
