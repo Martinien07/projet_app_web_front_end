@@ -4,10 +4,11 @@ import { getAllUsers, addUser, getUserById, updateUser, deleteUser } from '../co
 import { userValidationRules, validateUser } from '../validations/userValidator.js';
 import { protect } from '../middlewares/authMiddleware.js';
 const router = express.Router();
+
+//Route pour ajouter un utilisateur
+router.post('/add-user', userValidationRules(), validateUser, addUser);
 //Route pour recuperer tous les utilisateurs
 router.get('/',protect, getAllUsers);
-//Route pour ajouter un utilisateur
-router.post('/', userValidationRules(), validateUser, addUser);
 //Route pour recuperer un utilisateur par son id
 router.get('/:id',protect, getUserById);
 //Route pour modifier un utilisateur

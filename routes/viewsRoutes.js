@@ -9,6 +9,85 @@ router.get("/", (req, res) => {
     });
 });
 
+
+//  Erreur
+router.get("error/error-403", (req, res) => {
+    res.render("error/error-403", {
+        page: "error-403",
+        pageGroup: "error",
+        title: "Ierror-403"
+
+    });
+});
+
+
+
+router.get("error/error-400", (req, res) => {
+    res.render("error/error-400", {
+        page: "error-400",
+        pageGroup: "error",
+        title: "Ierror-400"
+
+    });
+});
+
+
+
+router.get("error/error-404", (req, res) => {
+    res.render("error/error-404", {
+        page: "error-404",
+        pageGroup: "error",
+        title: "Ierror-404"
+
+    });
+});
+
+
+router.get("error/error-500", (req, res) => {
+    res.render("error/error-500", {
+        page: "error-500",
+        pageGroup: "error",
+        title: "Ierror-500"
+
+    });
+});
+
+
+
+
+
+
+
+
+
+//  Authentification
+router.get("/register", (req, res) => {
+    res.render("auth/auth-register", {
+        page: "auth-register",
+        pageGroup: "Authentification",
+        title: "Inscription utilisateur"
+
+    });
+});
+
+
+router.get("auth/login", (req, res) => {
+    res.render("auth/auth-login", {
+        page: "auth-login",
+        pageGroup: "Authentification",
+        title: "Connexion utilisateur"
+
+    });
+});
+
+
+
+
+
+
+
+
+
 //  Chantiers
 router.get("/chantiers", (req, res) => {
     res.render("chantiers/list_chantier", {

@@ -1,0 +1,97 @@
+
+
+   <%- include("../partials/sidebar") %>   
+</div>
+        </div>
+        <div id="main">
+                    <%- include("../partials/header") %>
+            
+<div class="page-heading">
+  <div class="page-title">
+    <div class="row">
+      <div class="col-12 col-md-6 order-md-1 order-last">
+        <h3>Ajout Rôle</h3>
+        <p class="text-subtitle text-muted">
+     
+          les Rôles sont définis par rapport à un Rôle
+          
+       </div>
+      <div class="col-12 col-md-6 order-md-2 order-first">
+        <nav
+          aria-label="breadcrumb"
+          class="breadcrumb-header float-start float-lg-end"
+        >
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Ajout Rôle
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- // Basic multiple Column Form section start -->
+  <section id="multiple-column-form">
+    <div class="row match-height">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Ajouter un Rôle</h4>
+          </div>
+          <div class="card-content">
+            <div class="card-body">
+              <form class="form" data-parsley-validate>
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                      <label for="last-name-column" class="form-label"
+                        >Libellé</label>
+                      <div class="form-group">
+                          <select class="choices form-select">
+                              <option value="Ouvrier">Ouvrier</option>
+                              <option value="superviseur">Superviseur</option>
+                              <option value="employe">Employé de bureau</option>
+                              <option value="responsable">Responsable</option>
+                              <option value="inspecteur">Inspecteur</option>
+
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Description du role"
+                                id="floatingTextarea" name="description_role"></textarea>
+                            <label for="floatingTextarea">Description du role</label>
+                        </div>
+                    </div>
+                  </div>
+                  
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-1 mb-1">
+                      Enrégistrer
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-light-secondary me-1 mb-1"
+                    >
+                      Effacer
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- // Basic multiple Column Form section end -->
+</div>
+
+      <%- include("../partials/footer") %>  
+           

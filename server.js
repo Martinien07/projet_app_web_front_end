@@ -50,6 +50,7 @@ app.use("/", viewRoutes);
 // Servir les fichiers statiques depuis le dossier assets
 app.use('/assets', express.static(path.join(__dirname, './views/assets')));
 
+app.use(express.static('public')) //Permet d'acceder aux fichiers statiques sans le /public dans l'url
 
 
 
@@ -73,7 +74,7 @@ app.use('/api/inspection', inspectionRoutes);
 app.use('/api/assignment', assignmentRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
-app.use('/api/users', userRoutes);
+app.use('/users', userRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
 app.use('/api/notification', notificationRoutes);
