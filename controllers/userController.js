@@ -1,35 +1,16 @@
 import User from "../models/User.js";
-
 // Récupérer tous les utilisateurs
 export const getAllUsers = async (req, res) => {
-    try {  
+    try {
         const users = await User.findAll();
+
         res.render("user/list-user", {
             page: "users-list",
             title: "Liste des utilisateurs",
             pageGroup: "Utilisateurs",
+            error: req.query.error || null,
+            success: req.query.success || null,
             users
-        });
-    } catch (error) {
-        res.status(400).render("/error/error-400", {
-            page: "error-400",
-            title: "Erreur 400"
-        });
-    }
-};
-
-// Ajouter un utilisateur
-export const addUser = async (req, res) => {
-    const newUser = req.body;
-
-    try {
-        const user = await User.create(newUser);
-
-        res.render("auth/auth-login", {
-        page: "auth-login",
-        pageGroup: "Authentification",
-        title: "Connexion utilisateur"
-        
         });
 
     } catch (error) {
@@ -41,50 +22,98 @@ export const addUser = async (req, res) => {
     }
 };
 
-// Récupérer un utilisateur
-export const getUserById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const user = await User.findByPk(id);
+// Ajouter un utilisateur
+export const addUser = async (req, res) => {
+    const newUser = req.body;
 
-        res.render("users/details", {
-            page: "user-details",
-            user
-        });
+    try {
+        const user = await User.create(newUser);
+
+        return res.redirect("/login?success=Compte+ajouté+avec+succès");
+
+
 
     } catch (error) {
-        res.status(404).render("error/error-404", {
-            page: "error-404",
-            title: "Erreur 404"
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400",
+            error: error.message
         });
     }
 };
 
+// Récupérer un utilisateur// GET /admin/users/:id
+export const getUserDetails = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      return res.redirect("/admin/users?error=Utilisateur+introuvable");
+    }
+
+    res.render("user/details", {
+      user,
+      isProfile: false
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+};
+
+
+
+// GET /profile
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.session.user.id);
+
+    if (!user) {
+      return res.redirect("/login?error=Utilisateur+introuvable");
+    }
+
+    res.render("user/details", {
+      user,
+      isProfile: true,
+
+        title: "Profils utilisateur",
+        pageGroup: "Utilisateurs",
+        page: "profils",
+        error: req.query.error || null,
+        success: req.query.success || null,
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+};
+
+
 
 
 // Supprimer un utilisateur
+
+
+
 export const deleteUser = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const user = await User.findByPk(id);
-        if (user) {
-            await user.destroy();
-            res.render("users/list", {
-                page: "users-list",
-                message: "Utilisateur supprimé avec succès"
-            });
-        } else {
-            res.status(404).render("error/error-404", {
-                page: "error-404",
-                title: "Utilisateur non trouvé"
-            });
-        }
-    } catch (error) {
-        res.status(400).render("error/error-400", {
-            page: "error-400",
-            title: "Erreur 400"
-        });
+  try {
+    const id = req.params.id;
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.redirect("/users/list-user?error=Utilisateur+introuvable");
     }
+
+    await user.destroy();
+
+    return res.redirect("/users/list-user?success=Utilisateur+supprimé+avec+succès");
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Erreur serveur");
+  }
 };
 
 
@@ -92,7 +121,7 @@ export const deleteUser = async (req, res) => {
 
 // Affichage du formulaire de création
 export const newUserPage = (req, res) => {
-  res.render("/user-form", { user: null,
+  res.render("user/user-form", { user: null,
                 pageGroup: "Utilisateur",
                 title: "Création utilisateur",
                 page: "Ajout d'un utilisateur ",
@@ -117,10 +146,10 @@ export const createUser = async (req, res) => {
       password,
     });
 
-    res.redirect("/users?success=Utilisateur+créé");
+    res.redirect("/users/list-user?success=Utilisateur+créé");
   } catch (err) {
     console.error(err);
-    res.redirect("/users?error=Erreur+création");
+    res.redirect("/users/list-user?error=Erreur+création");
   }
 };
 
@@ -131,18 +160,16 @@ export const editUser = async (req, res) => {
 
     if (!user) return res.redirect("/users?error=Introuvable");
 
-  res.render("/user-form", { user,
+  res.render("user/user-form", { user,
                 pageGroup: "Utilisateur",
                 title: "Modification utilisateur",
                 page: "Update de l'utilisateur ",
-
-
 
   });
 
   } catch (err) {
     console.log(err);
-    res.redirect("//users?error=Erreur");
+    res.redirect("/error/error-400");
   }
 };
 
@@ -156,7 +183,7 @@ export const updateUser = async (req, res) => {
       { where: { id: req.params.id } }
     );
 
-    res.redirect("/users?success=Modifié");
+    res.redirect("/users/list-user?success=Modifié");
   } catch (err) {
     console.log(err);
     res.redirect("/users?error=Erreur+modification");

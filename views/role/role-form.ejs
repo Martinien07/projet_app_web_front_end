@@ -1,4 +1,4 @@
-<%- include("../partials/sidebar") %>  
+<%- include("../partials/sidebar") %>
 </div></div>
 
 <div id="main">
@@ -7,12 +7,14 @@
   <div class="page-heading">
     <div class="page-title">
       <div class="row">
+
         <div class="col-12 col-md-6 order-md-1 order-last">
           <h3><%= user ? "Modifier un utilisateur" : "Ajouter un utilisateur" %></h3>
           <p class="text-subtitle text-muted">
             Gestion des utilisateurs du système.
           </p>
         </div>
+
         <div class="col-12 col-md-6 order-md-2 order-first">
           <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
             <ol class="breadcrumb">
@@ -23,6 +25,7 @@
             </ol>
           </nav>
         </div>
+
       </div>
     </div>
   </div>
@@ -30,6 +33,7 @@
   <section id="multiple-column-form">
     <div class="row match-height">
       <div class="col-12">
+
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">
@@ -40,7 +44,9 @@
           <div class="card-content">
             <div class="card-body">
 
-              <form class="form" action="<%= user ? '/users/update/' + user.id : '/users/create' %>" method="POST">
+              <form class="form"
+                    action="<%= user ? '/users/update/' + user.id : '/users/create' %>"
+                    method="POST">
 
                 <div class="row">
 
@@ -48,14 +54,8 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group mandatory">
                       <label for="name" class="form-label">Nom complet</label>
-                      <input
-                        type="text"
-                        id="name"
-                        class="form-control"
-                        name="name"
-                        value="<%= user ? user.name : '' %>"
-                        required
-                      />
+                      <input type="text" id="name" name="name" class="form-control"
+                             value="<%= user ? user.name : '' %>" required>
                     </div>
                   </div>
 
@@ -63,14 +63,8 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group mandatory">
                       <label for="email" class="form-label">Email</label>
-                      <input
-                        type="email"
-                        id="email"
-                        class="form-control"
-                        name="email"
-                        value="<%= user ? user.email : '' %>"
-                        required
-                      />
+                      <input type="email" id="email" name="email" class="form-control"
+                             value="<%= user ? user.email : '' %>" required>
                     </div>
                   </div>
 
@@ -78,14 +72,8 @@
                   <div class="col-md-6 col-12">
                     <div class="form-group mandatory">
                       <label for="phone" class="form-label">Téléphone</label>
-                      <input
-                        type="text"
-                        id="phone"
-                        class="form-control"
-                        name="phone"
-                        value="<%= user ? user.phone : '' %>"
-                        required
-                      />
+                      <input type="text" id="phone" name="phone" class="form-control"
+                             value="<%= user ? user.phone : '' %>" required>
                     </div>
                   </div>
 
@@ -96,24 +84,14 @@
                         <label class="form-label">Status</label>
 
                         <div class="form-check">
-                        <input 
-                            class="form-check-input" 
-                            type="radio" 
-                            name="status" 
-                            value="1"
-                            <%= user && user.status === 1 ? "checked" : "" %>
-                        >
+                          <input class="form-check-input" type="radio" name="status" value="1"
+                                 <%= user && user.status === 1 ? "checked" : "" %>>
                           <label class="form-check-label">Actif</label>
                         </div>
 
                         <div class="form-check">
-                            <input 
-                                class="form-check-input" 
-                                type="radio" 
-                                name="status" 
-                                value="0"
-                                <%= user && user.status === 0 ? "checked" : "" %>
-                            >
+                          <input class="form-check-input" type="radio" name="status" value="0"
+                                 <%= user && user.status === 0 ? "checked" : "" %>>
                           <label class="form-check-label">Inactif</label>
                         </div>
 
@@ -121,28 +99,30 @@
                     </div>
                   </div>
 
-                  <!-- Accès / Rôle -->
+                  <!-- Accès (rôle simple : admin/user) -->
                   <div class="col-md-6 col-12">
                     <div class="form-group">
                       <label for="access" class="form-label">Rôle / Accès</label>
+
                       <select class="form-control" name="access" id="access">
-                        <option value="user" <%= user && user.access === "user" ? "selected" : "" %>>Utilisateur</option>
-                        <option value="admin" <%= user && user.access === "admin" ? "selected" : "" %>>Administrateur</option>
+                        <option value="user" <%= user && user.access === "user" ? "selected" : "" %>>
+                          Utilisateur
+                        </option>
+
+                        <option value="admin" <%= user && user.access === "admin" ? "selected" : "" %>>
+                          Administrateur
+                        </option>
                       </select>
+
                     </div>
                   </div>
 
-                  <!-- Mot de passe (seulement en création ou si modifié) -->
+                  <!-- Mot de passe uniquement si création -->
                   <% if (!user) { %>
                   <div class="col-md-6 col-12">
                     <div class="form-group mandatory">
-                      <label for="password" class="form-label">Mot de passe</label>
-                      <input
-                        type="password"
-                        class="form-control"
-                        name="password"
-                        required
-                      />
+                      <label class="form-label">Mot de passe</label>
+                      <input type="password" name="password" class="form-control" required>
                     </div>
                   </div>
                   <% } %>
@@ -151,6 +131,7 @@
 
                 <div class="row mt-4">
                   <div class="col-12 d-flex justify-content-end">
+
                     <button type="submit" class="btn btn-primary me-1 mb-1">
                       Enregistrer
                     </button>
@@ -158,12 +139,14 @@
                     <a href="/users/list-user" class="btn btn-light-secondary me-1 mb-1">
                       Annuler
                     </a>
+
                   </div>
                 </div>
 
               </form>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -171,19 +154,15 @@
 
   <%- include("../partials/footer") %>
 </div>
-    </div>
-    <script src="../../assets/static/js/components/dark.js"></script>
-    <script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    
-    
-    <script src="../../assets/compiled/js/app.js"></script>
-    
+</div>
 
-    
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
 <script src="../../assets/extensions/jquery/jquery.min.js"></script>
 <script src="../../assets/extensions/parsleyjs/parsley.min.js"></script>
 <script src="../../assets/static/js/pages/parsley.js"></script>
 
 </body>
-
 </html>

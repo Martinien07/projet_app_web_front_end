@@ -32,9 +32,26 @@
                 <h5 class="card-title">
                  
 
-                <a href="/users/create"><button type="" class="btn btn-primary me-1 mb-1">
+                <a href="/users/create_form"><button type="" class="btn btn-primary me-1 mb-1">
                 <i class="bi bi-plus-circle-fill"> Ajouter</i>
                 </button></a>
+
+
+
+            <% if (error) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+            <% } %>
+
+            <% if (success) { %>
+            <div class="alert alert-success">
+                <%= success %>
+            </div>
+            <% } %>
+
+
+
                 </h5>
 
 
@@ -69,9 +86,12 @@
                                             <i class="bi bi-pen-fill"></i>
                                         </a>
 
-                                        <a href="/users/delete/<%= user.id %>" class="btn btn-danger">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </a>
+                                            <a href="/users/delete/<%= user.id %>" 
+                                            class="btn btn-danger btn-delete">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+
+
                                     </td>
                                 </tr>
                             <% }); %>
@@ -99,6 +119,20 @@
     
 <script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
 <script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+
+
+<script>
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".btn-delete")) {
+        if (!confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+
+
 
 </body>
 
