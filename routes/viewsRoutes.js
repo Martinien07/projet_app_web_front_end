@@ -73,9 +73,9 @@ router.get("/register", (req, res) => {
 });
 
 
-router.get("/auth-forgot-password", (req, res) => {
-    res.render("auth/auth-forgot-password", {
-        page: "auth-forgot-password",
+router.get("/auth-change-password", (req, res) => {
+    res.render("auth/auth-change-password", {
+        page: "auth-change-password",
         pageGroup: "Authentification",
         title: "Changement de mot de passe"
 
@@ -84,15 +84,25 @@ router.get("/auth-forgot-password", (req, res) => {
 
 
 
-
-router.get("/login", (req, res) => {
-    res.render("auth/auth-login", {
-        page: "auth-login",
-        error: "error",
+router.get("/auth-forgot-password", (req, res) => {
+    res.render("auth/forgot password", {
+        page: "auth-forgot-password",
         pageGroup: "Authentification",
-        title: "Connexion utilisateur"
+        title: "Mot de passe oublié"
 
     });
+});
+
+
+
+router.get("/login", (req, res) => {
+  const { error, success } = req.query;
+
+  res.render("auth/auth-login", {
+    error: error || null,
+    success: success || null,
+    title: "Connexion"
+  });
 });
 
 

@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 
+
 import jwt from "jsonwebtoken";
 import  { User } from "../models/relation.js";
 
@@ -51,8 +52,7 @@ export const login = async (req, res) => {
 
 
 
-// Contrôleur pour le changement de mot de passe
-
+// Contrôleur pour le changement de mot de passe (dans sa session)
 export const changementPassword = async (req, res) => {
   const userId = req.session.user.id;
   const { oldPassword, newPassword } = req.body;
@@ -77,6 +77,69 @@ export const changementPassword = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+// Contrôleur pour le changement de mot de passe de l'utilisateur (hors session)
+// Changement du mot de passe par l’utilisateur
+
+export const changePasswordUser = async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+
+  try {
+    // Chercher l'utilisateur avec Sequelize
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.redirect("/login?error=Email+invalide");
+    }
+
+    // Vérifier l'ancien mot de passe
+    const match = await bcrypt.compare(oldPassword, user.password);
+    if (!match) {
+      return res.redirect("/login?error=Mot+de+passe+actuel+incorrect");
+    }
+
+    // Mettre à jour l'utilisateur
+    await user.update({ password: newPassword });
+
+    return res.redirect("/login?success=Mot+de+passe+modifié+avec+succès");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Erreur serveur");
+  }
+};
+
+
+
+
+// Réinitialisation du mot de passe par un administrateur
+export const resetPasswordAdmin = async (req, res) => {
+  const { email } = req.body;
+  const defaultPassword = process.env.DEFAULT_PASSWORD;
+
+  try {
+    // Chercher l'utilisateur
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.redirect("/admin/users?error=Utilisateur+introuvable");
+    }
+
+    // Hacher le mot de passe par défaut
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+    // Mettre à jour
+    await user.update({ password: hashedPassword });
+
+    return res.redirect("/admin/users?success=Mot+de+passe+réinitialisé");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Erreur serveur");
+  }
+};
+
+
+
 
 
 export const logout = (req, res) => {

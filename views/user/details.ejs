@@ -1,0 +1,117 @@
+<%- include("../partials/sidebar") %>
+</div>
+</div>
+
+<div id="main">
+  <%- include("../partials/header") %>
+
+  <div class="page-heading">
+    <div class="page-title">
+      <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-last">
+          <h3>
+            <%= isProfile ? "Mon Profil" : "Détails de l'utilisateur" %>
+          </h3>
+          <p class="text-subtitle text-muted">
+            <%= isProfile
+                ? "Informations personnelles de votre compte."
+                : "Informations complètes sur l'utilisateur." %>
+          </p>
+        </div>
+        <div class="col-12 col-md-6 order-md-2 order-first">
+          <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                <%= isProfile ? "Mon Profil" : "Détails Utilisateur" %>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title"><%= user.name %></h4>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+
+          <div class="col-md-6 col-12">
+            <div class="mb-3">
+              <label class="form-label"><strong>Nom</strong></label>
+              <p class="form-control-static"><%= user.name %></p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="mb-3">
+              <label class="form-label"><strong>Email</strong></label>
+              <p class="form-control-static"><%= user.email %></p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="mb-3">
+              <label class="form-label"><strong>Téléphone</strong></label>
+              <p class="form-control-static"><%= user.phone || "Non renseigné" %></p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="mb-3">
+              <label class="form-label"><strong>Status</strong></label>
+              <% if (user.status === "active") { %>
+                <span class="badge bg-success">Actif</span>
+              <% } else { %>
+                <span class="badge bg-danger">Inactif</span>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="mb-3">
+              <label class="form-label"><strong>Rôle</strong></label>
+              <p class="form-control-static"><%= user.role %></p>
+            </div>
+          </div>
+
+          <div class="col-12 d-flex justify-content-end mt-4">
+            <a href="/users/edit/<%= user.id %>" class="btn btn-primary me-2">
+              <i class="bi bi-pen-fill"></i> Modifier
+            </a>
+
+            <% if (!isProfile) { %>
+            <a href="/users/delete/<%= user.id %>" class="btn btn-danger">
+              <i class="bi bi-trash-fill"></i> Supprimer
+            </a>
+            <% } %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include("../partials/footer") %>
+
+        </div>
+    </div>
+    <script src="../../assets/static/js/components/dark.js"></script>
+    <script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    
+    
+    <script src="../../assets/compiled/js/app.js"></script>
+    
+
+    
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+</body>
+
+</html>   

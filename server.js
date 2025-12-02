@@ -5,6 +5,8 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from "dotenv";
+import methodOverride from 'method-override';
+
 dotenv.config();
 
 
@@ -44,7 +46,8 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+//tromper” Express avec un middleware
+app.use(methodOverride('_method'));
 
 
 
