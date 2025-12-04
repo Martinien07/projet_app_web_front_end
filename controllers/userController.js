@@ -7,7 +7,7 @@ export const getAllUsers = async (req, res) => {
         res.render("user/list-user", {
             page: "users-list",
             title: "Liste des utilisateurs",
-            pageGroup: "Utilisateurs",
+            pageGroup: "users",
             error: req.query.error || null,
             success: req.query.success || null,
             users
@@ -78,7 +78,7 @@ export const getProfile = async (req, res) => {
       isProfile: true,
 
         title: "Profils utilisateur",
-        pageGroup: "Utilisateurs",
+        pageGroup: "users",
         page: "profils",
         error: req.query.error || null,
         success: req.query.success || null,
@@ -122,7 +122,7 @@ export const deleteUser = async (req, res) => {
 // Affichage du formulaire de création
 export const newUserPage = (req, res) => {
   res.render("user/user-form", { user: null,
-                pageGroup: "Utilisateur",
+                pageGroup: "users",
                 title: "Création utilisateur",
                 page: "Ajout d'un utilisateur ",
 

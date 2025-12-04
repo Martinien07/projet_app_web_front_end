@@ -1,19 +1,40 @@
-//toutes les routes liees aux Role
+// toutes les routes liées aux rôles
 import express from 'express';
-import { getAllRoles, addRole, getRoleById, updateRole, deleteRole } from '../controllers/roleController.js';
+import { 
+    getAllRoles, 
+    showAddRoleForm, 
+    addRole, 
+    getRoleById, 
+    showEditRoleForm, 
+    updateRole, 
+    deleteRole 
+} from '../controllers/roleController.js';
 import { roleValidationRules, validateRole } from '../validations/roleValidator.js';
 import { protect } from '../middlewares/authMiddleware.js';
-const router = express.Router();
-//Route pour recuperer tous les roles
-router.get('/',protect, getAllRoles);
-//Route pour ajouter un role
-router.post('/',protect, roleValidationRules(), validateRole, addRole);
-//Route pour recuperer un role par son id
-router.get('/:id',protect, getRoleById);
-//Route pour modifier un role
-router.put('/:id',protect, updateRole);
-//Route pour supprimer un role
-router.delete('/:id',protect, deleteRole);
+import { isAuthenticated } from '../middlewares/authSession.js';
 
+
+const router = express.Router();
+
+// Créer un rôle (afficher le formulaire)
+router.get("/create_form", isAuthenticated, showAddRoleForm);
+
+// Créer un rôle (POST)
+router.post("/create", isAuthenticated, roleValidationRules(), validateRole, addRole);
+
+// Liste des rôles
+router.get("/list-role", isAuthenticated, getAllRoles);
+
+// Détails d’un rôle
+router.get("/details/:id", isAuthenticated, getRoleById);
+
+// Modifier un rôle (afficher le formulaire)
+router.get("/edit/:id", isAuthenticated, showEditRoleForm);
+
+// Modifier un rôle (POST)
+router.post("/update/:id", isAuthenticated, updateRole);
+
+// Supprimer un rôle
+router.get("/delete/:id", isAuthenticated, deleteRole);
 
 export default router;

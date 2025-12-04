@@ -9,13 +9,18 @@ export const roleValidationRules = () => {
         body('name').isIn(['superviseur','ouvrier','responsable','collaborateur', 'employe', 'inspecteur']).withMessage('Le rôle utilisateur n\'est pas valide'),
     ];
 }
+
 export const validateRole = (req, res, next) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-}
 
+    if (!errors.isEmpty()) {
+        req.session.roleErrors = errors.array();
+        req.session.roleOld = req.body;
+
+        return res.redirect("/roles/create_form");
+    }
+
+    next();
+};
 
 
