@@ -1,397 +1,183 @@
-import { Chantier, Incident } from "../models/relation.js";
-import Assignment from "../models/Assignment.js"; 
-import { validationResult } from 'express-validator';
-import { Op, fn, col } from "sequelize";
+import { Chantier } from "../models/relation.js";
 
-// récupérer tous les chantiers avec pagination et filtres
+
+
+/* ---------------------------------------------
+   LISTE DES CHANTIERS
+---------------------------------------------- */
 export const getAllChantiers = async (req, res) => {
-  try {
-    const { page = 1, limit = 10, statut, search } = req.query;
-    const offset = (page - 1) * limit;
+    try {
+        const chantiers = await Chantier.findAll();
 
-    const whereConditions = {};
-    
-    if (statut) {
-      whereConditions.statut = statut;
+        res.render("chantiers/list-chantier", {
+            page: "chantiers-list",
+            title: "Liste des chantiers",
+            pageGroup: "chantiers",
+            error: req.query.error || null,
+            success: req.query.success || null,
+            chantiers
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400",
+            error: error.message
+        });
     }
-    
-    if (search) {
-      whereConditions.nom = { [Op.like]: `%${search}%` };
-    }
-
-    const { count, rows: chantiers } = await Chantier.findAndCountAll({
-      where: whereConditions,
-      include: [{
-        association: 'Users',
-        through: { attributes: [] } // Ne pas inclure les attributs de la table de liaison
-      }],
-      order: [['createdAt', 'DESC']],
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-      distinct: true
-    });
-
-    res.status(200).json({
-      data: chantiers,
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(count / limit),
-        totalItems: count,
-        itemsPerPage: parseInt(limit)
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// ajouter un chantier
+/* ---------------------------------------------
+   FORMULAIRE DE CRÉATION
+---------------------------------------------- */
+export const showAddChantierForm = (req, res) => {
+
+    const errors = req.session.chantierErrors || null;
+    const old = req.session.chantierOld || null;
+
+    // Reset pour ne pas persister
+    req.session.chantierErrors = null;
+    req.session.chantierOld = null;
+
+    res.render("chantiers/chantier-form", { 
+        chantier: null,
+        pageGroup: "chantiers",
+        title: "Création d'un chantier",
+        page: "Ajout d'un chantier",
+        errors,
+        old
+    });
+};
+
+/* ---------------------------------------------
+   CRÉER UN CHANTIER
+---------------------------------------------- */
 export const addChantier = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+
+    console.log("DEBUG REQ.BODY:", req.body);
+
+
+    try {
+    await Chantier.create({
+      name: req.body.name,
+      location: req.body.location,
+      description: req.body.description,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      status: req.body.status
+    });
+
+        res.redirect("/chantiers/list-chantier?success=Chantier+créé");
+        
+    } catch (err) {
+        console.error(err);
+        res.redirect("/chantiers/list-chantier?error=Erreur+création");
     }
-
-    const newChantier = req.body;
-    const createdChantier = await Chantier.create({
-      ...newChantier,
-      statut: 'actif'
-    });
-
-    /* Ajouter l'utilisateur créateur comme assigné au chantier via la table Assignments
-    if (req.user && req.user.id) {
-      await Assignment.create({
-        userId: req.user.id,
-        chantierId: createdChantier.id,
-        roleId: req.user.roleId, // Supposons que le rôle est stocké dans req.user
-        assignedAt: new Date(),
-        isActive: true
-      });
-    }*/
-
-    res.status(201).json({ 
-      data: createdChantier, 
-      message: "Chantier ajouté avec succès" 
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// récupérer un chantier par son id
+
+
+
+
+
+
+/* ---------------------------------------------
+   DÉTAILS D’UN CHANTIER
+---------------------------------------------- */
 export const getChantierById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const chantier = await Chantier.findByPk(id, {
-      include: [{
-        association: 'Users',
-        through: { attributes: [] }
-      }]
-    });
-    
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
-    }
+    try {
+        const chantier = await Chantier.findByPk(req.params.id);
 
-    res.status(200).json({ data: chantier });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// modifier un chantier
-export const updateChantier = async (req, res) => {
-  const { id } = req.params;
-  const updatedChantier = req.body;
-  
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const chantier = await Chantier.findByPk(id);
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
-    }
-
-    await Chantier.update(updatedChantier, { where: { id } });
-    res.status(200).json({ message: "Chantier modifié avec succès" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// supprimer un chantier
-export const deleteChantier = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const chantier = await Chantier.findByPk(id);
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
-    }
-
-    // Supprimer d'abord les assignments liés à ce chantier
-    await Assignment.destroy({ where: { chantierId: id } });
-
-    // Puis supprimer le chantier
-    await Chantier.destroy({ where: { id } });
-    
-    res.status(200).json({ message: "Chantier supprimé avec succès" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Assigner un utilisateur à un chantier
-export const assignUserToChantier = async (req, res) => {
-  const { chantierId, userId } = req.params;
-  const { roleId } = req.body; // Rôle spécifique pour cet assignment
-  
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const chantier = await Chantier.findByPk(chantierId);
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
-    }
-
-    // Vérifier si l'assignation existe déjà et est active
-    const existingAssignment = await Assignment.findOne({
-      where: { 
-        userId, 
-        chantierId,
-        isActive: true
-      }
-    });
-
-    if (existingAssignment) {
-      return res.status(400).json({ message: "Utilisateur déjà assigné à ce chantier" });
-    }
-
-    // Créer l'assignation via la table Assignments
-    const assignment = await Assignment.create({
-      userId: parseInt(userId),
-      chantierId: parseInt(chantierId),
-      roleId: parseInt(roleId),
-      assignedAt: new Date(),
-      isActive: true
-    });
-
-    res.status(200).json({ 
-      message: "Utilisateur assigné au chantier avec succès",
-      data: assignment
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Retirer un utilisateur d'un chantier (désactiver l'assignation)
-export const removeUserFromChantier = async (req, res) => {
-  const { chantierId, userId } = req.params;
-  
-  try {
-    const chantier = await Chantier.findByPk(chantierId);
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
-    }
-
-    // Désactiver l'assignation au lieu de la supprimer
-    const assignment = await Assignment.findOne({
-      where: { 
-        userId: parseInt(userId), 
-        chantierId: parseInt(chantierId),
-        isActive: true
-      }
-    });
-
-    if (!assignment) {
-      return res.status(404).json({ message: "Utilisateur non assigné à ce chantier" });
-    }
-
-    // Désactiver l'assignation
-    await assignment.update({ isActive: false });
-
-    res.status(200).json({ 
-      message: "Utilisateur retiré du chantier avec succès",
-      data: {
-        chantierId: parseInt(chantierId),
-        userId: parseInt(userId)
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Récupérer tous les utilisateurs assignés à un chantier avec leurs rôles
-export const getUsersByChantier = async (req, res) => {
-  const { chantierId } = req.params;
-  
-  try {
-    const assignments = await Assignment.findAll({
-      where: { 
-        chantierId: parseInt(chantierId),
-        isActive: true 
-      },
-      include: [
-        {
-          association: 'User',
-          attributes: ['id', 'nom', 'email', 'telephone']
-        },
-        {
-          association: 'Role',
-          attributes: ['id', 'nom']
+        if (!chantier) {
+            return res.redirect("/chantiers/list-chantier?error=Chantier+introuvable");
         }
-      ]
-    });
-    
-    if (!assignments || assignments.length === 0) {
-      return res.status(200).json({ data: [], message: "Aucun utilisateur assigné à ce chantier" });
+
+        res.render("chantiers/details", {
+            chantier,
+            pageGroup: "chantiers",
+            title: "Détails du chantier",
+            page: "Détails",
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur serveur");
     }
-
-    // Formater la réponse pour inclure les informations utilisateur et rôle
-    const usersWithRoles = assignments.map(assignment => ({
-      assignmentId: assignment.id,
-      user: assignment.User,
-      role: assignment.Role,
-      assignedAt: assignment.assignedAt
-    }));
-
-    res.status(200).json({ data: usersWithRoles });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// Modifier le rôle d'un utilisateur sur un chantier
-export const updateUserRoleOnChantier = async (req, res) => {
-  const { chantierId, userId } = req.params;
-  const { roleId } = req.body;
-  
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+/* ---------------------------------------------
+   FORMULAIRE DE MODIFICATION
+---------------------------------------------- */
+export const showEditChantierForm = async (req, res) => {
+    try {
+        const chantier = await Chantier.findByPk(req.params.id);
+
+        if (!chantier) {
+            return res.redirect("/chantiers/list-chantier?error=Chantier+introuvable");
+        }
+
+        res.render("chantiers/chantier-form", {
+            chantier,
+            pageGroup: "chantiers",
+            title: "Modification d'un chantier",
+            page: "Modifier le chantier",
+
+            error: req.query.error || null,
+            success: req.query.success || null,
+
+            errors: req.session.chantierErrors || null,
+            old: req.session.chantierOld || null,
+        });
+
+        // Nettoyage
+        req.session.chantierErrors = null;
+        req.session.chantierOld = null;
+
+    } catch (err) {
+        console.error(err);
+        res.redirect("/error/error-400");
     }
-
-    const assignment = await Assignment.findOne({
-      where: { 
-        userId: parseInt(userId), 
-        chantierId: parseInt(chantierId),
-        isActive: true
-      }
-    });
-
-    if (!assignment) {
-      return res.status(404).json({ message: "Assignation non trouvée" });
-    }
-
-    await assignment.update({ roleId: parseInt(roleId) });
-
-    res.status(200).json({ 
-      message: "Rôle de l'utilisateur mis à jour avec succès",
-      data: assignment
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// Marquer un chantier comme terminé
-export const markChantierAsCompleted = async (req, res) => {
-  const { id } = req.params;
-  
-  try {
-    const chantier = await Chantier.findByPk(id);
+/* ---------------------------------------------
+   METTRE À JOUR UN CHANTIER
+---------------------------------------------- */
+export const updateChantier = async (req, res) => {
+    try {
+        const { name, location, description, startDate,endDate,status } = req.body;
 
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
+
+        await Chantier.update(
+            { name, location,description, startDate, endDate, status },
+            { where: { id: req.params.id } }
+        );
+
+        res.redirect("/chantiers/list-chantier?success=Chantier+modifié");
+
+    } catch (err) {
+        console.error(err);
+        res.redirect("/chantiers/list-chantier?error=Erreur+modification");
     }
-
-    // Vérifier s'il y a des incidents non résolus avant de le marquer comme terminé
-    const incidentsNonResolus = await Incident.count({
-      where: { 
-        chantierId: id,
-        statut: { [Op.ne]: 'resolu' }
-      }
-    });
-
-    if (incidentsNonResolus > 0) {
-      return res.status(400).json({ 
-        message: "Impossible de fermer le chantier. Des incidents ne sont pas résolus."
-      });
-    }
-
-    await Chantier.update({ 
-      statut: 'termine',
-      dateFinPrevue: new Date()
-    }, { where: { id } });
-
-    // Désactiver toutes les assignations actives pour ce chantier
-    await Assignment.update(
-      { isActive: false },
-      { where: { chantierId: id, isActive: true } }
-    );
-
-    res.status(200).json({ message: "Chantier marqué comme terminé avec succès" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// Statistiques d'un chantier
-export const getChantierStats = async (req, res) => {
-  const { id } = req.params;
-  
-  try {
-    const chantier = await Chantier.findByPk(id, {
-      include: [{
-        association: 'Users',
-        through: { attributes: [] }
-      }]
-    });
+/* ---------------------------------------------
+   SUPPRIMER UN CHANTIER
+---------------------------------------------- */
+export const deleteChantier = async (req, res) => {
+    try {
+        const chantier = await Chantier.findByPk(req.params.id);
 
-    if (!chantier) {
-      return res.status(404).json({ message: "Chantier non trouvé" });
+        if (!chantier) {
+            return res.redirect("/chantiers/list-chantier?error=Chantier+introuvable");
+        }
+
+        await chantier.destroy();
+
+        res.redirect("/chantiers/list-chantier?success=Chantier+supprimé");
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur serveur");
     }
-
-    // Compter les assignments actifs par rôle
-    const assignmentsByRole = await Assignment.findAll({
-      where: { 
-        chantierId: parseInt(id),
-        isActive: true 
-      },
-      include: ['Role'],
-      group: ['Role.id', 'Role.nom'],
-      attributes: [
-        'Role.id',
-        'Role.nom',
-        [fn('COUNT', col('Assignment.id')), 'count']
-      ]
-    });
-
-    const stats = {
-      general: {
-        nom: chantier.nom,
-        statut: chantier.statut,
-        dateDebut: chantier.dateDebut,
-        dateFinPrevue: chantier.dateFinPrevue,
-        personnelTotal: chantier.Users.length
-      },
-      personnelParRole: assignmentsByRole.map(role => ({
-        role: role.Role.nom,
-        count: role.get('count')
-      }))
-    };
-
-    res.status(200).json({ data: stats });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };

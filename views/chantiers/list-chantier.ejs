@@ -1,0 +1,127 @@
+<%- include("../partials/sidebar") %>
+
+</div>
+</div>
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Tous les chantiers</h3>
+                <p class="text-subtitle text-muted">Liste de tous les chantiers enregistrés dans le système</p>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Chantiers</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <h5 class="card-title">Gestion des chantiers</h5>
+
+                <a href="/chantiers/create_form" class="btn btn-primary">
+                    <i class="bi bi-plus-circle-fill"></i> Ajouter un chantier
+                </a>
+
+            </div>
+
+            <div class="card-body">
+
+                <% if (error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+
+                <% if (success) { %>
+                <div class="alert alert-success"><%= success %></div>
+                <% } %>
+
+                <table class="table table-striped" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Lieu</th>
+                            <th>Description</th>
+                            <th>Date début</th>
+                            <th>Date fin</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% chantiers.forEach(chantier => { %>
+                        <tr>
+                            <td><%= chantier.name %></td>
+                            <td><%= chantier.location %></td>
+                            <td><%= chantier.description %></td>
+                            <td><%= new Date(chantier.startDate).toLocaleDateString("fr-CA") %></td>
+                            <td><%= new Date(chantier.endDate).toLocaleDateString("fr-CA") %></td>
+
+                            <td>
+                                <% if (chantier.status === 'en_cours') { %>
+                                    <span class="badge bg-success">En cours</span>
+
+                                <% } else if (chantier.status === 'en_pause') { %>
+                                    <span class="badge bg-danger">En arrêt</span>
+
+                                <% } else { %>
+                                    <span class="badge bg-secondary">Terminé</span>
+                                <% } %>
+                            </td>
+
+
+                            <td>
+                                <a href="/chantiers/edit/<%= chantier.id %>" class="btn btn-primary">
+                                    <i class="bi bi-pen-fill"></i>
+                                </a>
+
+                                <a href="/chantiers/delete/<%= chantier.id %>" class="btn btn-danger btn-delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+<script>
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".btn-delete")) {
+        if (!confirm("Voulez-vous vraiment supprimer ce chantier ?")) {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+
+</body>
+</html>
