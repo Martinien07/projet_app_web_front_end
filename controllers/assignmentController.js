@@ -12,7 +12,7 @@ export const getAllAssignments = async (req, res) => {
         res.render("assignments/list-assignment", {
             page: "assignments-list",
             title: "Liste des assignments",
-            pageGroup: "assignments",
+            pageGroup: "chantiers",
             error: req.query.error || null,
             success: req.query.success || null,
             assignments
@@ -47,7 +47,7 @@ export const showAddAssignmentForm = async (req, res) => {
 
         res.render("assignments/assignment-form", { 
             assignment: null,
-            pageGroup: "assignments",
+            pageGroup: "chantiers",
             title: "Création d'un assignment",
             page: "Ajout d'un assignment",
 
@@ -78,7 +78,7 @@ export const addAssignment = async (req, res) => {
             chantierId: req.body.chantierId,    
             roleId: req.body.roleId,
             assignedAt: req.body.assignedAt,
-            isActive: req.body.isActive,
+            isActive: req.body.isActive === "1" ? 1 : 0,
        
 
         });
@@ -111,7 +111,7 @@ export const getAssignmentById = async (req, res) => {
 
         res.render("assignments/details", {
             assignment,
-            pageGroup: "assignments",
+            pageGroup: "chantiers",
             title: "Détails de l'assignment",
             page: "Détails",
         });
@@ -142,7 +142,7 @@ export const showEditAssignmentForm = async (req, res) => {
         res.render("assignments/assignment-form", {
             assignment,
 
-            pageGroup: "assignments",
+            pageGroup: "chantiers",
             title: "Modification d'un assignment",
             page: "Modifier l'assignment",
 
@@ -175,7 +175,7 @@ export const updateAssignment = async (req, res) => {
             chantierId: req.body.chantierId,    
             roleId: req.body.roleId,
             assignedAt: req.body.assignedAt,
-            isActive: req.body.isActive,
+            isActive: req.body.isActive === "1" ? 1 : 0,
             
             },
             { where: { id: req.params.id } }

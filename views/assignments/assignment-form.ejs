@@ -145,14 +145,18 @@
                       <label class="form-label">Actif</label>
 
                       <div class="form-check form-switch">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          name="isActive"
-                          value="1"
-                          <%= (assignment && assignment.isActive) ? "checked" : "" %>
-                          <%= (old && old.isActive) ? "checked" : "" %>
-                        >
+                      <!-- input caché pour envoyer 0 si NON coché -->
+                      <input type="hidden" name="isActive" value="0"> 
+                      <input class="form-check-input"
+                            type="checkbox"
+                            name="isActive"
+                            value="1"
+                            <%= (assignment && assignment.isActive) ? "checked" : "" %>
+                            <%= (old && old.isActive) ? "checked" : "" %>
+>
+
+>
+
                         <label class="form-check-label">Affectation active</label>
                       </div>
                     </div>
@@ -168,7 +172,7 @@
                       Enregistrer
                     </button>
 
-                    <a href="/assignments/list" class="btn btn-light-secondary me-1 mb-1">
+                    <a href="/assignments/list-assignment" class="btn btn-light-secondary me-1 mb-1">
                       Annuler
                     </a>
 
