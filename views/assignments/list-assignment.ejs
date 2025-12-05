@@ -1,0 +1,131 @@
+<%- include("../partials/sidebar") %>
+
+</div>
+</div>
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Affectations</h3>
+                <p class="text-subtitle text-muted">Liste des utilisateurs affectés aux chantiers avec un rôle</p>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Affectations</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title">Gestion des affectations</h5>
+
+                <a href="/assignments/create_form" class="btn btn-primary">
+                    <i class="bi bi-plus-circle-fill"></i> Nouvelle affectation
+                </a>
+            </div>
+
+            <div class="card-body">
+
+                <% if (error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+
+                <% if (success) { %>
+                <div class="alert alert-success"><%= success %></div>
+                <% } %>
+
+                <table class="table table-striped" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Chantier</th>
+                            <th>Rôle</th>
+                            <th>Date d'affectation</th>
+                            <th>Actif</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% assignments.forEach(a => { %>
+                        <tr>
+
+                            <td>
+                                <%= a.User ? a.User.firstName + " " + a.User.lastName : "—" %>
+                            </td>
+
+                            <td>
+                                <%= a.Chantier ? a.Chantier.name : "—" %>
+                            </td>
+
+                            <td>
+                                <%= a.Role ? a.Role.name : "—" %>
+                            </td>
+
+                            <td>
+                                <%= new Date(a.assignedAt).toLocaleDateString("fr-CA") %>
+                            </td>
+
+                            <td>
+                                <% if (a.isActive) { %>
+                                    <span class="badge bg-success">Actif</span>
+                                <% } else { %>
+                                    <span class="badge bg-secondary">Inactif</span>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <a href="/assignments/edit/<%= a.id %>" class="btn btn-primary">
+                                    <i class="bi bi-pen-fill"></i>
+                                </a>
+
+                                <a href="/assignments/delete/<%= a.id %>" class="btn btn-danger btn-delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                        <% }) %>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+<script>
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".btn-delete")) {
+        if (!confirm("Voulez-vous vraiment supprimer cette affectation ?")) {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+
+</body>
+</html>

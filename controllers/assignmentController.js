@@ -1,97 +1,216 @@
-//import { User } from "../models/relation.js";
+import { Assignment, User, Chantier, Role } from "../models/relation.js";
 
-import  { User, Chantier, Role, Assignment } from "../models/relation.js";
-
-
-// recupérer tous les assignments
+/* =============================================================
+   LISTE DES ASSIGNMENTS
+   ============================================================= */
 export const getAllAssignments = async (req, res) => {
-    try {  
-        const assignments = await Assignment.findAll({
-            include: [
-                { model: User, attributes: ['id', 'name', 'email'] },
-                { model: Chantier, attributes: ['id', 'name'] },
-                { model: Role, attributes: ['id', 'name'] }
-            ]
-        });
-        res.status(200).json({ data: assignments })
-    } catch (error) {
-        res.status(404).json({ message: error.message })
-    }
-}
-
-// ajouter un assignment
-export const addAssignment = async (req, res) => {
-    const newAssignment = req.body;
-    try {
-        const assignment = await Assignment.create(newAssignment);
-        res.status(201).json({ data: assignment, message: "Assignment ajoute avec succes" })
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-}
-
-
-// recupérer un assignment par son idde l'utilisateur
-export const getAssignmentById = async (req, res) => {
-    const { userId } = req.params; // on récupère le userId depuis l'URL
     try {
         const assignments = await Assignment.findAll({
-            where: { userId },
-            include: [
-                { model: User, attributes: ['id', 'name', 'email'] },
-                { model: Chantier, attributes: ['id', 'name'] },
-                { model: Role, attributes: ['id', 'name'] }
-            ]
+            include: [User, Chantier, Role]
         });
 
-        if (!assignments || assignments.length === 0) {
-            return res.status(404).json({ message: "Aucune affectation trouvée pour cet utilisateur." });
-        }
+        res.render("assignments/list-assignment", {
+            page: "assignments-list",
+            title: "Liste des assignments",
+            pageGroup: "assignments",
+            error: req.query.error || null,
+            success: req.query.success || null,
+            assignments
+        });
 
-        res.status(200).json({ data: assignments });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error(error);
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400",
+            error: error.message
+        });
     }
 };
 
-//modifier un assignment
 
+/* =============================================================
+    FORMULAIRE DE CRÉATION
+   ============================================================= */
+export const showAddAssignmentForm = async (req, res) => {
+    const errors = req.session.assignmentErrors || null;
+    const old = req.session.assignmentOld || null;
+
+    req.session.assignmentErrors = null;
+    req.session.assignmentOld = null;
+
+    try {
+        //  CHARGEMENT DES LISTES
+        const users = await User.findAll();
+        const chantiers = await Chantier.findAll();
+        const roles = await Role.findAll();
+
+        res.render("assignments/assignment-form", { 
+            assignment: null,
+            pageGroup: "assignments",
+            title: "Création d'un assignment",
+            page: "Ajout d'un assignment",
+
+            errors,
+            old,
+
+            users,
+            chantiers,
+            roles
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur serveur");
+    }
+};
+
+
+/* =============================================================
+   CRÉER UN ASSIGNMENT
+   ============================================================= */
+export const addAssignment = async (req, res) => {
+
+    console.log("DEBUG REQ.BODY:", req.body);
+
+    try {
+        await Assignment.create({
+            userId: req.body.userId,
+            chantierId: req.body.chantierId,    
+            roleId: req.body.roleId,
+            assignedAt: req.body.assignedAt,
+            isActive: req.body.isActive,
+       
+
+        });
+
+        res.redirect("/assignments/list-assignment?success=Assignment+créé");
+
+    } catch (err) {
+        console.error(err);
+
+        req.session.assignmentErrors = ["Erreur lors de la création"];
+        req.session.assignmentOld = req.body;
+
+        res.redirect("/assignments/create");
+    }
+};
+
+
+/* =============================================================
+   DÉTAILS D’UN ASSIGNMENT
+   ============================================================= */
+export const getAssignmentById = async (req, res) => {
+    try {
+        const assignment = await Assignment.findByPk(req.params.id, {
+            include: [User, Chantier, Role]
+        });
+
+        if (!assignment) {
+            return res.redirect("/assignments/list-assignment?error=Assignment+introuvable");
+        }
+
+        res.render("assignments/details", {
+            assignment,
+            pageGroup: "assignments",
+            title: "Détails de l'assignment",
+            page: "Détails",
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur serveur");
+    }
+};
+
+
+/* =============================================================
+   FORMULAIRE DE MODIFICATION
+   ============================================================= */
+export const showEditAssignmentForm = async (req, res) => {
+    try {
+        const assignment = await Assignment.findByPk(req.params.id);
+
+        if (!assignment) {
+            return res.redirect("/assignments/list-assignment?error=Assignment+introuvable");
+        }
+
+        //  CHARGEMENT DES LISTES
+        const users = await User.findAll();
+        const chantiers = await Chantier.findAll();
+        const roles = await Role.findAll();
+
+        res.render("assignments/assignment-form", {
+            assignment,
+
+            pageGroup: "assignments",
+            title: "Modification d'un assignment",
+            page: "Modifier l'assignment",
+
+            errors: req.session.assignmentErrors || null,
+            old: req.session.assignmentOld || null,
+
+            users,
+            chantiers,
+            roles
+        });
+
+        req.session.assignmentErrors = null;
+        req.session.assignmentOld = null;
+
+    } catch (err) {
+        console.error(err);
+        res.redirect("/assignments/list-assignment?error=Erreur+chargement");
+    }
+};
+
+
+/* =============================================================
+   METTRE À JOUR UN ASSIGNMENT
+   ============================================================= */
 export const updateAssignment = async (req, res) => {
-   const { userId } = req.params;
-    const updatedAssignment = req.body;
     try {
-        const assignment = await Assignment.findOne({where: { userId }});
-        if (assignment) {
-            await assignment.update(updatedAssignment);
-            res.status(200).json({ data: assignment, message: "Assignment mis a jour avec succes" });
-        }
-            else {  
-            res.status(404).json({ message: "Assignment non trouve" });
-        }
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+        await Assignment.update(
+            {
+            userId: req.body.userId,
+            chantierId: req.body.chantierId,    
+            roleId: req.body.roleId,
+            assignedAt: req.body.assignedAt,
+            isActive: req.body.isActive,
+            
+            },
+            { where: { id: req.params.id } }
+        );
+
+        res.redirect("/assignments/list-assignment?success=Assignment+modifié");
+
+    } catch (err) {
+        console.error(err);
+
+        req.session.assignmentErrors = ["Erreur lors de la modification"];
+        req.session.assignmentOld = req.body;
+
+        res.redirect(`/assignments/${req.params.id}/edit`);
     }
-}
-// supprimer un assignment
+};
+
+
+/* =============================================================
+   SUPPRIMER UN ASSIGNMENT
+   ============================================================= */
 export const deleteAssignment = async (req, res) => {
-    const { id } = req.params;
     try {
-        const assignment = await Assignment.findByPk(id);
-        if (assignment) {
-            await assignment.destroy();
-            res.status(200).json({ message: "Assignment supprime avec succes" });
+        const assignment = await Assignment.findByPk(req.params.id);
+
+        if (!assignment) {
+            return res.redirect("/assignments/list-assignment?error=Assignment+introuvable");
         }
-        else {
-            res.status(404).json({ message: "Assignment non trouve" });
-        }
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+
+        await assignment.destroy();
+
+        res.redirect("/assignments/list-assignment?success=Assignment+supprimé");
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur serveur");
     }
-}
-
-
-
-
-
-
-
+};

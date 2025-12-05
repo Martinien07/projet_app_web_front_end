@@ -101,7 +101,7 @@ app.use('/inspection', inspectionRoutes);
 
 
 //Route pour les assignement à partir de assignmentRoutes.js
-app.use('/assignment', assignmentRoutes);
+app.use('/assignments', assignmentRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
 app.use('/users', userRoutes);
