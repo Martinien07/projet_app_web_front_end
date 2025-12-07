@@ -73,12 +73,23 @@ export const addAssignment = async (req, res) => {
     console.log("DEBUG REQ.BODY:", req.body);
 
     try {
+        let isActive;
+
+        if (Array.isArray(req.body.isActive) && req.body.isActive.includes("1")) {
+            isActive = "1";   // coché
+        } else {
+            isActive = "0";   // décoché
+        }
+
+
+
+
         await Assignment.create({
             userId: req.body.userId,
             chantierId: req.body.chantierId,    
             roleId: req.body.roleId,
             assignedAt: req.body.assignedAt,
-            isActive: req.body.isActive === "1" ? 1 : 0,
+            isActive: isActive,
        
 
         });
@@ -91,7 +102,7 @@ export const addAssignment = async (req, res) => {
         req.session.assignmentErrors = ["Erreur lors de la création"];
         req.session.assignmentOld = req.body;
 
-        res.redirect("/assignments/create");
+        res.redirect("/assignments/create_form");
     }
 };
 
@@ -127,6 +138,8 @@ export const getAssignmentById = async (req, res) => {
    FORMULAIRE DE MODIFICATION
    ============================================================= */
 export const showEditAssignmentForm = async (req, res) => {
+
+
     try {
         const assignment = await Assignment.findByPk(req.params.id);
 
@@ -168,14 +181,27 @@ export const showEditAssignmentForm = async (req, res) => {
    METTRE À JOUR UN ASSIGNMENT
    ============================================================= */
 export const updateAssignment = async (req, res) => {
+
+    console.log("DEBUG REQ.BODY:", req.body);
     try {
+
+        let isActive;
+
+        if (Array.isArray(req.body.isActive) && req.body.isActive.includes("1")) {
+            isActive = "1";   // coché
+        } else {
+            isActive = "0";   // décoché
+        }
+
+
+
         await Assignment.update(
             {
             userId: req.body.userId,
             chantierId: req.body.chantierId,    
             roleId: req.body.roleId,
             assignedAt: req.body.assignedAt,
-            isActive: req.body.isActive === "1" ? 1 : 0,
+            isActive: isActive,
             
             },
             { where: { id: req.params.id } }

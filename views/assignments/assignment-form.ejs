@@ -60,7 +60,7 @@
             <div class="card-body">
 
               <form class="form"
-                action="<%= assignment ? '/assignments/update/' + assignment.id : '/assignments/create' %>"
+                action="<%= assignment ? '/assignments/update/' + assignment.id : '/assignments/create/' %>"
                 method="POST">
 
                 <div class="row">
@@ -153,9 +153,8 @@
                             value="1"
                             <%= (assignment && assignment.isActive) ? "checked" : "" %>
                             <%= (old && old.isActive) ? "checked" : "" %>
->
-
->
+          
+                          >
 
                         <label class="form-check-label">Affectation active</label>
                       </div>
