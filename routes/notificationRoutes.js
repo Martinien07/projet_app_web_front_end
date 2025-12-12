@@ -1,37 +1,85 @@
+// toutes les routes liées aux notifications
 import express from "express";
+
 import {
-  createNotification,
-  getNotifications,
-  deleteNotification,
-  markNotificationAsRead, getNotificationById
+    addNotification,
+    getAllNotifications,
+    getNotificationDetails,
+    showAddNotificationForm,
+    showEditNotificationForm,
+    updateNotification,
+    deleteNotification,
+    markNotificationAsRead,
+    getUserChantierNotifications,
+    getAllNotificationsById
+    
 } from "../controllers/notificationController.js";
-import { protect } from "../middlewares/authMiddleware.js";
+
+import { isAuthenticated } from "../middlewares/authSession.js";
+import { notificationValidationRules, validateNotification } from "../validations/notificationValidator.js";
 
 const router = express.Router();
 
-/**
- * Créer une notification
- */
-router.post("/",protect, createNotification);
-
-/**
- * Récupérer les notifications avec filtres
- * Ex : GET /api/notification?target=18&scope=user&level=all&isRead=false
- */
-router.get("/",protect, getNotifications);
 
 
-router.get("/:id",protect, getNotificationById);
+/* -------------------------------
+   Liste de toutes les notifications
+--------------------------------*/
+router.get("/mine", isAuthenticated, getAllNotificationsById);
 
 
-/**
- * Supprimer une notification
- */
-router.delete("/:id",protect, deleteNotification);
+router.get("/list-notifications", isAuthenticated, getAllNotifications);
 
-/**
- * Marquer une notification comme lue
- */
-router.put("/read/:notificationId",protect, markNotificationAsRead);
+router.get("/sites", isAuthenticated, getUserChantierNotifications);
+
+/* -------------------------------
+   FORMULAIRE : Ajouter une notification
+--------------------------------*/
+router.get("/create_form", isAuthenticated, showAddNotificationForm);
+
+/* -------------------------------
+   ACTION : Ajouter une notification
+--------------------------------*/
+router.post("/create", 
+    isAuthenticated, 
+    notificationValidationRules(),
+    validateNotification,
+    addNotification
+);
+
+
+
+// Route pour afficher les détails d’une notification
+router.get("/:id", isAuthenticated, getNotificationDetails);
+
+/* -------------------------------
+   Détails d’une notification
+--------------------------------*/
+router.get("/details/:id", isAuthenticated, getNotificationDetails);
+
+/* -------------------------------
+   FORMULAIRE : Modifier une notification
+--------------------------------*/
+router.get("/edit/:id", isAuthenticated, showEditNotificationForm);
+
+/* -------------------------------
+   ACTION : Modifier une notification
+--------------------------------*/
+router.post("/update/:id",
+    isAuthenticated,
+    notificationValidationRules(),
+    validateNotification,
+    updateNotification
+);
+
+/* -------------------------------
+   Supprimer une notification
+--------------------------------*/
+router.get("/delete/:id", isAuthenticated, deleteNotification);
+
+/* -------------------------------
+   Marquer une notification comme lue
+--------------------------------*/
+router.get("/read/:id", isAuthenticated, markNotificationAsRead);
 
 export default router;

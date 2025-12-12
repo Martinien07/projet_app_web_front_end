@@ -1,0 +1,129 @@
+<%- include("../partials/sidebar") %>
+
+</div>
+</div>
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Toutes les notifications</h3>
+                <p class="text-subtitle text-muted">Liste de toutes les notifications enregistrées dans le système</p>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Notifications</li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title">Gestion des notifications</h5>
+
+                <a href="/notifications/create_form" class="btn btn-primary">
+                    <i class="bi bi-plus-circle-fill"></i> Ajouter une notification
+                </a>
+            </div>
+
+            <div class="card-body">
+
+                <% if (error) { %>
+                    <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+
+                <% if (success) { %>
+                    <div class="alert alert-success"><%= success %></div>
+                <% } %>
+
+                <table class="table table-striped" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Message</th>
+                            <th>Priorité</th>
+                            <th>Créée le</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% notifications.forEach(notification => { %>
+                        <tr>
+
+                            <td><%= notification.title %></td>
+
+                            <td style="max-width: 350px; white-space: normal;">
+                                <%= notification.message %>
+                            </td>
+
+                            <td>
+                                <% if (notification.priority === 'high') { %>
+                                    <span class="badge bg-danger">Haute</span>
+                                <% } else if (notification.priority === 'medium') { %>
+                                    <span class="badge bg-warning text-dark">Moyenne</span>
+                                <% } else { %>
+                                    <span class="badge bg-secondary">Faible</span>
+                                <% } %>
+                            </td>
+
+                            <td><%= new Date(notification.createdAt).toLocaleDateString("fr-CA") %></td>
+
+                            <td>
+  
+
+                                <a href="/notifications/edit/<%= notification.id %>" class="btn btn-primary">
+                                    <i class="bi bi-pen-fill"></i>
+                                </a>
+
+                                <a href="/notifications/delete/<%= notification.id %>" class="btn btn-danger btn-delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                        <% }) %>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+<script>
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".btn-delete")) {
+        if (!confirm("Voulez-vous vraiment supprimer cette notification ?")) {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+
+</body>
+</html>

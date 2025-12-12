@@ -1,0 +1,134 @@
+<%- include("../partials/sidebar") %>
+
+</div>
+</div>
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Notifications de mes chantiers</h3>
+                <p class="text-subtitle text-muted">
+                    Notifications liées aux chantiers sur lesquels vous êtes ou avez été affecté.
+                </p>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Mes Chantiers</li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title">Notifications liées à vos chantiers</h5>
+            </div>
+
+            <div class="card-body">
+
+                <% if (error) { %>
+                    <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+
+                <% if (success) { %>
+                    <div class="alert alert-success"><%= success %></div>
+                <% } %>
+
+                <% if (notifications.length === 0) { %>
+                    <div class="alert alert-info">
+                        Vous n'avez aucune notification provenant des chantiers auxquels vous êtes affecté.
+                    </div>
+                <% } %>
+
+                <% if (notifications.length > 0) { %>
+                <table class="table table-striped" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Message</th>
+                            <th>Chantier</th>
+                            <th>Statut de lecture</th>
+                            <th>Créée le</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% notifications.forEach(notification => { %>
+                        <tr>
+
+                            <td><%= notification.title %></td>
+
+                            <td style="max-width: 350px; white-space: normal;">
+                                <%= notification.message %>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-primary">
+                                    Chantier #<%= notification.target %>
+                                </span>
+                            </td>
+
+                            <td>
+                                <% 
+                                   const rec = notification.NotificationRecipients.find(r => r.recipientId === user.id);
+                                %>
+
+                                <% if (rec && rec.isRead) { %>
+                                    <span class="badge bg-success">Lu</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning text-dark">Non lu</span>
+                                <% } %>
+                            </td>
+
+                            <td><%= new Date(notification.createdAt).toLocaleDateString("fr-CA") %></td>
+
+                            <td>
+                                <a href="/notifications/details/<%= notification.id %>" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+
+                                <% if (!rec || !rec.isRead) { %>
+                                <a href="/notifications/read/<%= notification.id %>" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check2-circle"></i>
+                                </a>
+                                <% } %>
+                            </td>
+
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+</body>
+</html>

@@ -9,6 +9,7 @@ export const getAllAssignments = async (req, res) => {
             include: [User, Chantier, Role]
         });
 
+<<<<<<< HEAD
         res.render("assignments/list-assignment", {
             page: "assignments-list",
             title: "Liste des assignments",
@@ -17,6 +18,11 @@ export const getAllAssignments = async (req, res) => {
             success: req.query.success || null,
             assignments
         });
+=======
+        if (!assignments || assignments.length === 0) {
+            return res.status(404).json({ message: "Aucunes affectation trouvée pour cet utilisateur." });
+        }
+>>>>>>> origin/notifications
 
     } catch (error) {
         console.error(error);
@@ -239,4 +245,48 @@ export const deleteAssignment = async (req, res) => {
         console.error(err);
         res.status(500).send("Erreur serveur");
     }
+<<<<<<< HEAD
+=======
+}
+
+
+
+
+// les chantiers sur lesquels l'utilisateur connecté travaille ou a travaillé
+export const listChantiersOfConnectedUser = async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+
+        const userId = req.session.user.id;
+
+        const assignments = await Assignment.findAll({
+            where: { userId, isActive: true },
+            include: [
+                { model: Chantier },
+                { model: Role }
+            ]
+        });
+
+        res.render("chantiers/my_chantiers", {
+            
+            page: "Mes chantiers",
+            title: "Liste de mes chantiers",
+            pageGroup: "chantiers",
+            error: req.query.error || null,
+            success: req.query.success || null,
+            assignments
+
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400",
+            error: error.message
+        });
+    }
+>>>>>>> origin/notifications
 };

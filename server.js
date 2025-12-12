@@ -104,7 +104,7 @@ app.use('/assignments', assignmentRoutes);
 app.use('/users', userRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
-app.use('/notification', notificationRoutes);
+app.use('/notifications', notificationRoutes);
 
 //Route pour l'authentification à partir de authRoutes.js
 app.use('/auth', authRoutes);
