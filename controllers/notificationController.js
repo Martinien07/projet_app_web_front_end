@@ -33,7 +33,7 @@ export const addNotification = async (req, res) => {
         if (!title || !message || !scope) {
             req.session.notificationErrors = [{ msg: "title, message et scope sont requis" }];
             req.session.notificationOld = req.body;
-            return res.redirect("/notifications/create_form");
+            return res.redirect("/notification/list-notification?error=title+message+scope+requis");
         }
 
         const finalLevel = level || "all";

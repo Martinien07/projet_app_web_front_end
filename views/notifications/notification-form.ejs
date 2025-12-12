@@ -56,7 +56,7 @@
             <div class="card-body">
 
               <form class="form"
-                    action="<%= notification ? '/notifications/update/' + notification.id : '/notifications/create' %>"
+                    action="<%= notification ? '/notification/update/' + notification.id : '/notification/create' %>"
                     method="POST">
 
                 <div class="row">
@@ -154,7 +154,7 @@
                       Enregistrer
                     </button>
 
-                    <a href="/notifications/list-notifications" class="btn btn-light-secondary me-1 mb-1">
+                    <a href="/notification/list-notifications" class="btn btn-light-secondary me-1 mb-1">
                       Annuler
                     </a>
                   </div>
