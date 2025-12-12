@@ -94,7 +94,7 @@ app.use(express.static('public')) //Permet d'acceder aux fichiers statiques sans
 // app.use('/api/as', userRoutes);
 
 //Route pour les inspections
-app.use('/inspection', inspectionRoutes);
+app.use('/inspections', inspectionRoutes);
 
 
 //Route pour les assignement à partir de assignmentRoutes.js
