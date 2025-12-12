@@ -45,7 +45,7 @@ export const getAssignmentById = async (req, res) => {
         });
 
         if (!assignments || assignments.length === 0) {
-            return res.status(404).json({ message: "Aucune affectation trouvée pour cet utilisateur." });
+            return res.status(404).json({ message: "Aucunes affectation trouvée pour cet utilisateur." });
         }
 
         res.status(200).json({ data: assignments });
@@ -92,6 +92,40 @@ export const deleteAssignment = async (req, res) => {
 
 
 
+// les chantiers sur lesquels l'utilisateur connecté travaille ou a travaillé
+export const listChantiersOfConnectedUser = async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
 
+        const userId = req.session.user.id;
 
+        const assignments = await Assignment.findAll({
+            where: { userId, isActive: true },
+            include: [
+                { model: Chantier },
+                { model: Role }
+            ]
+        });
 
+        res.render("chantiers/my_chantiers", {
+            
+            page: "Mes chantiers",
+            title: "Liste de mes chantiers",
+            pageGroup: "chantiers",
+            error: req.query.error || null,
+            success: req.query.success || null,
+            assignments
+
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400",
+            error: error.message
+        });
+    }
+};
