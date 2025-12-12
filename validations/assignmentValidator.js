@@ -1,167 +1,164 @@
-// validations/assignmentValidation.js
-
 import { body, validationResult } from "express-validator";
 import { User, Chantier, Role, Assignment } from "../models/relation.js";
+import { Op } from "sequelize";
 
-export const validateAssignment = [
-    // 1) VALIDATIONS DE FORMAT
-    body("userId")
-        .isInt().withMessage("L'ID de l'utilisateur doit être un entier"),
+/* ============================================================
+   VALIDATION → CREATION ASSIGNMENT
+   ============================================================ */
+export const assignmentValidationRules = () => {
+    return [
 
-    body("chantierId")
-        .isInt().withMessage("L'ID du chantier doit être un entier"),
+        body("userId")
+            .notEmpty().withMessage("L'utilisateur est obligatoire")
+            .isInt().withMessage("L'ID de l'utilisateur doit être un entier")
+            .custom(async value => {
+                const user = await User.findByPk(value);
+                if (!user) throw new Error("Utilisateur inexistant");
+                return true;
+            }),
 
-    body("roleId")
-        .isInt().withMessage("L'ID du rôle doit être un entier"),
+        body("chantierId")
+            .notEmpty().withMessage("Le chantier est obligatoire")
+            .isInt().withMessage("L'ID du chantier doit être un entier")
+            .custom(async value => {
+                const chantier = await Chantier.findByPk(value);
+                if (!chantier) throw new Error("Chantier inexistant");
+                return true;
+            }),
 
-    body("assignedAt")
-        .optional()
-        .isISO8601().withMessage("La date d'affectation doit être une date valide"),
+        body("roleId")
+            .notEmpty().withMessage("Le rôle est obligatoire")
+            .isInt().withMessage("L'ID du rôle doit être un entier")
+            .custom(async value => {
+                const role = await Role.findByPk(value);
+                if (!role) throw new Error("Rôle inexistant");
+                return true;
+            }),
 
-    body("isActive")
-        .optional()
-        .isBoolean().withMessage("Le statut actif doit être un booléen"),
+        //  RÈGLE MÉTIER : un seul rôle par chantier pour un utilisateur
+        body().custom(async body => {
+            const { userId, chantierId } = body;
 
-    // 2) VERIFICATION D'EXISTENCE EN BASE
-    async (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            return res.status(400).json({ errors: errors.array() });
-
-        const { userId, chantierId, roleId } = req.body;
-
-        try {
-            const user = await User.findByPk(userId);
-            if (!user) {
-                return res.status(404).json({ message: "Utilisateur inexistant." });
-            }
-
-            const chantier = await Chantier.findByPk(chantierId);
-            if (!chantier) {
-                return res.status(404).json({ message: "Chantier inexistant." });
-            }
-
-            const role = await Role.findByPk(roleId);
-            if (!role) {
-                return res.status(404).json({ message: "Rôle inexistant." });
-            }
-
-            next();
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    },
-
-    // 3) VERIFIER SI L’AFFECTATION EXISTE DÉJÀ
-    async (req, res, next) => {
-        const { userId, chantierId, roleId } = req.body;
-
-        try {
-            const existingAssignment = await Assignment.findOne({
-                where: { userId, chantierId, roleId }
+            const existing = await Assignment.findOne({
+                where: { userId, chantierId }
             });
 
-            if (existingAssignment) {
-                return res.status(409).json({
-                    message: "Cet utilisateur est déjà affecté à ce chantier avec ce rôle."
-                });
+            if (existing) {
+                throw new Error(
+                    "Cet utilisateur possède déjà un rôle sur ce chantier. Il ne peut pas en avoir un second."
+                );
             }
 
-            next();
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+            return true;
+        })
+    ];
+};
+
+
+
+/* ============================================================
+   MIDDLEWARE GESTION DES ERREURS
+   ============================================================ */
+export const validateAssignment = (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        req.session.assignmentErrors = errors.array();
+        req.session.assignmentOld = req.body;
+
+        return res.redirect("/assignments/create_form");
     }
-];
+
+    next();
+};
 
 
-// Pour les mises à jours 
 
 
-export const validateAssignmentUpdate = [
-    // 1) VALIDATIONS DE FORMAT (seulement si le champ est fourni)
-    body("userId")
-        .optional()
-        .isInt().withMessage("L'ID de l'utilisateur doit être un entier"),
 
-    body("chantierId")
-        .optional()
-        .isInt().withMessage("L'ID du chantier doit être un entier"),
+/* ============================================================
+   VALIDATION → UPDATE ASSIGNMENT
+   ============================================================ */
+export const assignmentValidationRulesUpdate = () => {
+    return [
 
-    body("roleId")
-        .optional()
-        .isInt().withMessage("L'ID du rôle doit être un entier"),
+        body("userId")
+            .optional()
+            .isInt().withMessage("L'ID utilisateur doit être un entier")
+            .custom(async value => {
+                if (!value) return true;
+                const user = await User.findByPk(value);
+                if (!user) throw new Error("Utilisateur inexistant");
+                return true;
+            }),
 
-    body("assignedAt")
-        .optional()
-        .isISO8601().withMessage("La date d'affectation doit être une date valide"),
+        body("chantierId")
+            .optional()
+            .isInt().withMessage("L'ID du chantier doit être un entier")
+            .custom(async value => {
+                if (!value) return true;
+                const chantier = await Chantier.findByPk(value);
+                if (!chantier) throw new Error("Chantier inexistant");
+                return true;
+            }),
 
-    body("isActive")
-        .optional()
-        .isBoolean().withMessage("Le statut actif doit être un booléen"),
+        body("roleId")
+            .optional()
+            .isInt().withMessage("L'ID du rôle doit être un entier")
+            .custom(async value => {
+                if (!value) return true;
+                const role = await Role.findByPk(value);
+                if (!role) throw new Error("Rôle inexistant");
+                return true;
+            }),
 
-    // 2) VERIFICATION D'EXISTENCE EN BASE
-    async (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            return res.status(400).json({ errors: errors.array() });
+        // ❗ Vérification règle métier en update
+        body().custom(async (body, meta) => {
+            const { userId, chantierId, roleId } = body;
+            const assignmentId = meta.req.params.id;
 
-        const { userId, chantierId, roleId } = req.body;
+            const assignment = await Assignment.findByPk(assignmentId);
+            if (!assignment) throw new Error("Assignment introuvable");
 
-        try {
-            if (userId) {
-                const user = await User.findByPk(userId);
-                if (!user) {
-                    return res.status(404).json({ message: "Utilisateur inexistant." });
-                }
-            }
+            const realEmployee = userId || assignment.userId;
+            const realChantier = chantierId || assignment.chantierId;
 
-            if (chantierId) {
-                const chantier = await Chantier.findByPk(chantierId);
-                if (!chantier) {
-                    return res.status(404).json({ message: "Chantier inexistant." });
-                }
-            }
-
-            if (roleId) {
-                const role = await Role.findByPk(roleId);
-                if (!role) {
-                    return res.status(404).json({ message: "Rôle inexistant." });
-                }
-            }
-
-            next();
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    },
-
-    // 3) VERIFIER SI L’AFFECTATION MODIFIÉE EXISTE DÉJÀ
-    async (req, res, next) => {
-        const { userId, chantierId, roleId } = req.body;
-
-        // Si aucun des champs principaux n'est modifié, pas besoin de vérifier les doublons
-        if (!userId && !chantierId && !roleId) return next();
-
-        try {
-            // On cherche une affectation existante avec la combinaison des valeurs mises à jour
-            const existingAssignment = await Assignment.findOne({
+            const conflict = await Assignment.findOne({
                 where: {
-                    userId: userId || req.assignment.userId,
-                    chantierId: chantierId || req.assignment.chantierId,
-                    roleId: roleId || req.assignment.roleId
+                    userId: realEmployee,
+                    chantierId: realChantier,
+                    id: { [Op.ne]: assignmentId }
                 }
             });
 
-            if (existingAssignment && existingAssignment.id !== req.assignment.id) {
-                return res.status(409).json({
-                    message: "Une autre affectation existe déjà avec ces valeurs."
-                });
+            if (conflict) {
+                throw new Error(
+                    "Impossible de modifier : cet utilisateur possède déjà un rôle sur ce chantier."
+                );
             }
 
-            next();
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+            return true;
+        })
+    ];
+};
+
+
+
+export const validateAssignmentUpdate = (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        req.session.assignmentErrors = errors.array();
+        req.session.assignmentOld = req.body;
+
+        return res.redirect(`/assignments/edit/${req.params.id}`);
     }
-];
+
+    next();
+};
+
+
+
+
+
+

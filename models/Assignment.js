@@ -15,6 +15,12 @@ isActive	BOOLEAN
 **/
 
 const Assignment=database.define('Assignment',{
+
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     userId:{
         type:DataTypes.INTEGER,
         allowNull:false,
