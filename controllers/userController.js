@@ -1,87 +1,164 @@
-//import { User } from "../models/relation.js";
-
-// recupérer tous les utilisateurs
 import User from "../models/User.js";
-export const getAllUsers = async (req, res) => {
 
+// Récupérer tous les utilisateurs
+export const getAllUsers = async (req, res) => {
     try {  
         const users = await User.findAll();
-
-        res.status(200).json({ data: users }) 
+        res.render("user/list-user", {
+            page: "users-list",
+            title: "Liste des utilisateurs",
+            pageGroup: "Utilisateurs",
+            users
+        });
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(400).render("/error/error-400", {
+            page: "error-400",
+            title: "Erreur 400"
+        });
     }
-}
-// ajouter un utilisateur
+};
+
+// Ajouter un utilisateur
 export const addUser = async (req, res) => {
     const newUser = req.body;
 
     try {
         const user = await User.create(newUser);
-        res.status(201).json({ data: user, message: "Utilisateur ajoute avec succes" })
+
+        res.render("auth/auth-login", {
+        page: "auth-login",
+        pageGroup: "Authentification",
+        title: "Connexion utilisateur"
+        
+        });
+
     } catch (error) {
-        res.status(400).json({ message: error.message })
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400",
+            error: error.message
+        });
     }
-}
-// recupérer un utilisateur par son id
+};
+
+// Récupérer un utilisateur
 export const getUserById = async (req, res) => {
     const { id } = req.params;
     try {
         const user = await User.findByPk(id);
-        res.status(200).json({ data: user })
-    }
-    catch (error) {
-        res.status(404).json({ message: error.message })
-    }
-}
 
-
-//modifier un utilisateur
-export const updateUser = async (req, res) => {
-    const { id } = req.params;
-    const updatedUser = req.body;
-
-    try {
-        const user = await User.findByPk(id);
-        if (!user) {
-            return res.status(404).json({ message: "Utilisateur non trouvé" });
-        }
-
-        // Champs autorisés
-        const allowedFields = ["name", "email", "phone", "status"];
-        const safeData = Object.keys(updatedUser)
-            .filter(key => allowedFields.includes(key))
-            .reduce((obj, key) => ({ ...obj, [key]: updatedUser[key] }), {});
-
-        // Mettre à jour
-        await user.update(safeData);
-
-        res.status(200).json({ data: user, message: "Utilisateur mis à jour avec succès" });
+        res.render("users/details", {
+            page: "user-details",
+            user
+        });
 
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(404).render("error/error-404", {
+            page: "error-404",
+            title: "Erreur 404"
+        });
     }
 };
 
-//supprimer un utilisateur
+
+
+// Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
     const { id } = req.params;
     try {
         const user = await User.findByPk(id);
         if (user) {
             await user.destroy();
-            res.status(200).json({ message: "Utilisateur supprime avec succes" });
+            res.render("users/list", {
+                page: "users-list",
+                message: "Utilisateur supprimé avec succès"
+            });
         } else {
-            res.status(404).json({ message: "Utilisateur non trouve" });
+            res.status(404).render("error/error-404", {
+                page: "error-404",
+                title: "Utilisateur non trouvé"
+            });
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur 400"
+        });
     }
-}
+};
 
 
 
 
+// Affichage du formulaire de création
+export const newUserPage = (req, res) => {
+  res.render("/user-form", { user: null,
+                pageGroup: "Utilisateur",
+                title: "Création utilisateur",
+                page: "Ajout d'un utilisateur ",
 
 
 
+  });
+};
+
+// Créer utilisateur
+export const createUser = async (req, res) => {
+  try {
+    const { name, email, phone, status, access, password } = req.body;
+
+
+    await User.create({
+      name,
+      email,
+      phone,
+      status,
+      access,
+      password,
+    });
+
+    res.redirect("/users?success=Utilisateur+créé");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/users?error=Erreur+création");
+  }
+};
+
+// Afficher formulaire de modification
+export const editUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) return res.redirect("/users?error=Introuvable");
+
+  res.render("/user-form", { user,
+                pageGroup: "Utilisateur",
+                title: "Modification utilisateur",
+                page: "Update de l'utilisateur ",
+
+
+
+  });
+
+  } catch (err) {
+    console.log(err);
+    res.redirect("//users?error=Erreur");
+  }
+};
+
+// Mettre à jour utilisateur
+export const updateUser = async (req, res) => {
+  try {
+    const { name, email, phone, status, access } = req.body;
+
+    await User.update(
+      { name, email, phone, status, access },
+      { where: { id: req.params.id } }
+    );
+
+    res.redirect("/users?success=Modifié");
+  } catch (err) {
+    console.log(err);
+    res.redirect("/users?error=Erreur+modification");
+  }
+};

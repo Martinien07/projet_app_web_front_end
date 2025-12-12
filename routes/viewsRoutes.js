@@ -1,13 +1,117 @@
 import express from "express";
+import { isAuthenticated } from "../middlewares/authSession.js"
+import { error } from "console";
 const router = express.Router();
 
 //  Dashboard
-router.get("/", (req, res) => {
+router.get("/",isAuthenticated, (req, res) => {
     res.render("dashboard/index", {
         page: "dashboard",
         pageGroup: "dashboard"
     });
 });
+
+
+//  Erreur
+router.get("/error/error-403", (req, res) => {
+    res.render("error/error-403", {
+        page: "error-403",
+        pageGroup: "error",
+        title: "Ierror-403"
+
+    });
+});
+
+
+
+router.get("/error/error-400", (req, res) => {
+    res.render("error/error-400", {
+        page: "error-400",
+        pageGroup: "error",
+        title: "Ierror-400"
+
+    });
+});
+
+
+
+router.get("/error/error-404", (req, res) => {
+    res.render("error/error-404", {
+        page: "error-404",
+        pageGroup: "error",
+        title: "Ierror-404"
+
+    });
+});
+
+
+router.get("/error/error-500", (req, res) => {
+    res.render("error/error-500", {
+        page: "error-500",
+        pageGroup: "error",
+        title: "Ierror-500"
+
+    });
+});
+
+
+
+
+
+
+
+
+
+//  Authentification
+router.get("/register", (req, res) => {
+    res.render("auth/auth-register", {
+        page: "auth-register",
+        pageGroup: "Authentification",
+        title: "Inscription utilisateur"
+
+    });
+});
+
+
+router.get("/auth-change-password", (req, res) => {
+    res.render("auth/auth-change-password", {
+        page: "auth-change-password",
+        pageGroup: "Authentification",
+        title: "Changement de mot de passe"
+
+    });
+});
+
+
+
+router.get("/auth-forgot-password", (req, res) => {
+    res.render("auth/forgot password", {
+        page: "auth-forgot-password",
+        pageGroup: "Authentification",
+        title: "Mot de passe oublié"
+
+    });
+});
+
+
+
+router.get("/login", (req, res) => {
+  const { error, success } = req.query;
+
+  res.render("auth/auth-login", {
+    error: error || null,
+    success: success || null,
+    title: "Connexion"
+  });
+});
+
+
+
+
+
+
+
+
 
 //  Chantiers
 router.get("/chantiers", (req, res) => {

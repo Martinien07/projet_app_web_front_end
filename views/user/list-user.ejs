@@ -1,0 +1,105 @@
+
+    <%- include("../partials/sidebar") %>
+
+</div>
+        </div>
+        <div id="main">
+        <%- include("../partials/header") %>   
+
+
+
+            
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Tous les utilisateurs </h3>
+                <p class="text-subtitle text-muted">Liste de tous les utilisateurs dans le système</p>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href=" ">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tous les utilisateurs</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                 
+
+                <a href="/users/create"><button type="" class="btn btn-primary me-1 mb-1">
+                <i class="bi bi-plus-circle-fill"> Ajouter</i>
+                </button></a>
+                </h5>
+
+
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>email</th>
+                            <th>Téléphone </th>
+                            <th>status </th>
+                            <th>Access</th>
+                             <th>Action</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <% users.forEach(user => { %>
+                                <tr>
+                                    <td><%= user.name %></td>
+                                    <td><%= user.email %></td>
+                                    <td><%= user.phone %></td>
+                                    <td>
+                                        <span class="badge <%= user.status === true ? 'bg-success' : 'bg-danger' %>">
+                                            <%= user.status %>
+                                        </span>
+                                    </td>
+                                    <td><%= user.access %></td>
+
+                                    <td>
+                                        <a href="/users/edit/<%= user.id %>" class="btn btn-primary">
+                                            <i class="bi bi-pen-fill"></i>
+                                        </a>
+
+                                        <a href="/users/delete/<%= user.id %>" class="btn btn-danger">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+        <%- include("../partials/footer") %>  
+
+ 
+        </div>
+    </div>
+    <script src="../../assets/static/js/components/dark.js"></script>
+    <script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    
+    
+    <script src="../../assets/compiled/js/app.js"></script>
+    
+
+    
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+</body>
+
+</html>   

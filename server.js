@@ -4,6 +4,10 @@ import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from "dotenv";
+import methodOverride from 'method-override';
+
+dotenv.config();
 
 
 
@@ -19,6 +23,8 @@ import inspectionRoutes from './routes/inspectionRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
 import viewRoutes from "./routes/viewsRoutes.js";
+import session from "express-session";
+
 
 
 
@@ -40,6 +46,20 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+//tromper” Express avec un middleware
+app.use(methodOverride('_method'));
+
+
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        maxAge: 1000 * 60 * 60 * 24 // 24h
+    }
+}));
+
 
 
 
@@ -50,11 +70,17 @@ app.use("/", viewRoutes);
 // Servir les fichiers statiques depuis le dossier assets
 app.use('/assets', express.static(path.join(__dirname, './views/assets')));
 
+app.use(express.static('public')) //Permet d'acceder aux fichiers statiques sans le /public dans l'url
 
 
 
 //Creation des tables
 //database.sync({ alter: true })
+
+
+//gestion des sessions utilisateurs
+
+
 
 
 //Route de test
@@ -73,13 +99,13 @@ app.use('/api/inspection', inspectionRoutes);
 app.use('/api/assignment', assignmentRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
-app.use('/api/users', userRoutes);
+app.use('/users', userRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
 app.use('/api/notification', notificationRoutes);
 
 //Route pour l'authentification à partir de authRoutes.js
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 //Route pour les actions admin à partir de adminRoutes.js
 app.use('/api/admin', adminRoutes);
