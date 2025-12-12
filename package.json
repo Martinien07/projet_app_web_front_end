@@ -1,0 +1,45 @@
+{
+  "name": "projet_app_web",
+  "version": "1.0.0",
+  "description": "projet application web",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Martinien07/projet_app_web.git"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "groupe01",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Martinien07/projet_app_web/issues"
+  },
+  "homepage": "https://github.com/Martinien07/projet_app_web#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.3.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.19.2",
+    "mysql2": "^3.15.3",
+    "nodemon": "^3.1.10",
+    "promise-mysql": "^5.2.0",
+    "sequelize": "^6.37.7"
+  }
+}

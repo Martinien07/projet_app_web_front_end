@@ -1,0 +1,87 @@
+<%- include("../partials/sidebar") %>
+
+</div>
+</div>
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Détails de l'incident</h3>
+                <p class="text-subtitle text-muted">Informations détaillées sur l'incident</p>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/incidents/list-incident">Incidents</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Détails</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Détails de l'incident : <%= incident.title %></h5>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Chantier :</strong> <%= incident.Chantier ? incident.Chantier.name : 'N/A' %></p>
+                        <p><strong>Lieu :</strong> <%= incident.Chantier ? incident.Chantier.location : 'N/A' %></p>
+                        <p><strong>Rapporté par :</strong> <%= incident.Reporter ? incident.Reporter.name : 'N/A' %></p>
+                        <p><strong>Date :</strong> <%= new Date(incident.date).toLocaleDateString("fr-CA") %></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Gravité :</strong> 
+                            <% if (incident.severity === 'mineur') { %>
+                                <span class="badge bg-success">Mineur</span>
+                            <% } else if (incident.severity === 'modéré') { %>
+                                <span class="badge bg-warning">Modéré</span>
+                            <% } else { %>
+                                <span class="badge bg-danger">Critique</span>
+                            <% } %>
+                        </p>
+                        <p><strong>Statut :</strong> 
+                            <% if (incident.status === 'ouvert') { %>
+                                <span class="badge bg-primary">Ouvert</span>
+                            <% } else if (incident.status === 'en_cours') { %>
+                                <span class="badge bg-info">En cours</span>
+                            <% } else { %>
+                                <span class="badge bg-secondary">Résolu</span>
+                            <% } %>
+                        </p>
+                        <p><strong>Description :</strong> <%= incident.description %></p>
+                        <% if (incident.photo) { %>
+                            <p><strong>Photo :</strong> <a href="<%= incident.photo %>" target="_blank">Voir la photo</a></p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="/incidents/edit/<%= incident.id %>" class="btn btn-primary">Modifier</a>
+                    <a href="/incidents/list-incident" class="btn btn-secondary">Retour à la liste</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<%- include("../partials/sidebar") %></div>
+    </div>
+    <div id="main">
+        <%- include("../partials/header") %>
+
+            <div class="page-heading">
+                <h3>Détails de l'inspection</h3>
+            </div>
+
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Inspection du <%= new Date(inspection.date).toLocaleDateString("fr-CA") %>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Chantier :</strong>
+                                    <%= inspection.Chantier?.name || 'N/A' %> (<%= inspection.Chantier?.location %>)
+                                </p>
+                                <p><strong>Inspecteur :</strong>
+                                    <%= inspection.Inspector?.name || 'N/A' %>
+                                </p>
+                                <p><strong>Date :</strong>
+                                    <%= new Date(inspection.date).toLocaleDateString("fr-CA") %>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Statut :</strong>
+                                    <% if (inspection.status==='conforme' ) { %><span
+                                            class="badge bg-success">Conforme</span>
+                                        <% } else if (inspection.status==='non_conforme' ) { %><span
+                                                class="badge bg-danger">Non conforme</span>
+                                            <% } else { %><span class="badge bg-warning">En attente</span>
+                                                <% } %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <% if (inspection.observation) { %>
+                            <div class="mt-3"><strong>Observations :</strong>
+                                <p>
+                                    <%= inspection.observation %>
+                                </p>
+                            </div>
+                            <% } %>
+                                <% if (inspection.recommendations) { %>
+                                    <div class="mt-3"><strong>Recommandations :</strong>
+                                        <p>
+                                            <%= inspection.recommendations %>
+                                        </p>
+                                    </div>
+                                    <% } %>
+
+                                        <div class="mt-4">
+                                            <a href="/inspections/edit/<%= inspection.id %>"
+                                                class="btn btn-primary">Modifier</a>
+                                            <a href="/inspections/list" class="btn btn-secondary">Retour</a>
+                                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <%- include("../partials/footer") %>
+    </div>
+    </div>

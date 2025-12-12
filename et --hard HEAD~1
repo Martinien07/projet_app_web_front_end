@@ -1,0 +1,83 @@
+[33mcommit 9264e7270f71e06280afa1eed32ac1d4f1bbd126[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdashboard[m[33m)[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Dec 7 16:59:56 2025 -0500
+
+    statistic sur tableau de bord
+
+[33mcommit 7065d7b5e5c7fd7c7725ffebbafc3bcdbc9c54ca[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Sun Dec 7 12:05:25 2025 -0500
+
+    modification des activations des affectations
+
+[33mcommit 272c9d02c86ed7379421122fb001ee489e1a3159[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Thu Dec 4 23:56:07 2025 -0500
+
+    odification d'une affectation
+
+[33mcommit ca5dc984178b8ddc24d6fd7238c1419d982d3ccd[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Thu Dec 4 21:11:54 2025 -0500
+
+    ajout de assignment
+
+[33mcommit 63a25c2fb54eafc00b7d698c2efb1fa3033211f1[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Wed Dec 3 22:48:22 2025 -0500
+
+    ajout, modification et suppression chantier à partir du frontend
+
+[33mcommit f5e488ad17e0d4187ecda6c19ecb89c6fadd9102[m[33m ([m[1;31morigin/roles[m[33m)[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Wed Dec 3 20:50:06 2025 -0500
+
+    ajout et modification des roles ajoutées au front end
+
+[33mcommit 840e7fe193b5dad38b09b036f5dd8b6b44d5888b[m[33m ([m[1;31morigin/users[m[33m)[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Tue Dec 2 17:50:54 2025 -0500
+
+    CRUD user
+
+[33mcommit 24be1070c870ecff2281551d8e9ed717620aad29[m[33m ([m[1;31morigin/auth[m[33m)[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Mon Dec 1 22:05:46 2025 -0500
+
+    visualisation de la liste des utilisateurs
+
+[33mcommit c23975ef0d6967a81f1b3d53d9c246e8002c0528[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Sun Nov 30 18:33:52 2025 -0500
+
+    authentification et connexion à la page d'accueil
+
+[33mcommit 6c7ae5b837ef0102195e0779a8578f306ac2f757[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Sun Nov 30 16:48:00 2025 -0500
+
+     ajout d'utilisateur
+
+[33mcommit f22a385f88d03eda582b5d3f9e875e6e823a5ff9[m
+Author: Martinien MEHOUN <2739825@collegelacite.ca>
+Date:   Sun Nov 30 11:59:00 2025 -0500
+
+    intialisation sur un nouveau poste
+
+[33mcommit c295d08f78955899b63d86e1372470137ce2471b[m[33m ([m[1;32mdevelop[m[33m)[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Thu Nov 27 22:15:17 2025 -0500
+
+    configuration des liens chantiers et dashbord dans sidebar et aussi la création des routes des pages views
+
+[33mcommit 949416eab5afede6ce19e2dd40eb2f48b6c39f2f[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Thu Nov 27 18:00:29 2025 -0500
+
+    ajout des views et test avec index
+
+[33mcommit 502155fb39d12afe51fdc03784361423674e8750[m
+Author: Martinien07 <2739825@collegelacite.ca>
+Date:   Thu Nov 27 17:06:56 2025 -0500
+
+    initialisation du projet
