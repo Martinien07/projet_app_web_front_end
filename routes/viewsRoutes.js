@@ -1,15 +1,13 @@
 import express from "express";
 import { isAuthenticated } from "../middlewares/authSession.js"
+import { getDashboard } from "../controllers/dashboardController.js"
+
+
 import { error } from "console";
 const router = express.Router();
 
 //  Dashboard
-router.get("/",isAuthenticated, (req, res) => {
-    res.render("dashboard/index", {
-        page: "dashboard",
-        pageGroup: "dashboard"
-    });
-});
+router.get("/",isAuthenticated, getDashboard);
 
 
 //  Erreur

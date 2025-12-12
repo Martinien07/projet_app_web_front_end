@@ -64,7 +64,12 @@
 
 
     <!-- sidebar -->
-<%- include("partials/sidebar") %>
+
+    <%
+  const page = page || "";
+  const pageGroup = pageGroup || "";
+%>
+<%- include("partials/sidebar", { page: page, pageGroup: pageGroup }) %>
 
 </div>
         </div>

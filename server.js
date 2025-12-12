@@ -71,7 +71,7 @@ app.use((req, res, next) => {
 //Utilisation de ejs comme moteur de rendu
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.use("/", viewRoutes);
+
 // Servir les fichiers statiques depuis le dossier assets
 app.use('/assets', express.static(path.join(__dirname, './views/assets')));
 
@@ -89,9 +89,6 @@ app.use(express.static('public')) //Permet d'acceder aux fichiers statiques sans
 
 
 //Route de test
-app.get('/', (req, res) => {
-    res.render('index')
-});
 
 //Route pour les utilisateurs à partir de userRoutes.js
 // app.use('/api/as', userRoutes);
@@ -101,7 +98,7 @@ app.use('/inspections', inspectionRoutes);
 
 
 //Route pour les assignement à partir de assignmentRoutes.js
-app.use('/assignment', assignmentRoutes);
+app.use('/assignments', assignmentRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
 app.use('/users', userRoutes);
@@ -125,6 +122,10 @@ app.use('/incidents', incidentRoutes);
 
 //Route pour les roles à partir de roleRoutes.js
 app.use('/roles', roleRoutes );
+
+
+
+app.use("/", viewRoutes);
 
 
 //Demarrer le serveur

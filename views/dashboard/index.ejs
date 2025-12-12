@@ -1,5 +1,4 @@
-
-    <%- include("../partials/sidebar") %>
+<%- include("../partials/sidebar") %>
 </div>
         </div>
         <div id="main">
@@ -7,29 +6,34 @@
 
             
 <div class="page-heading">
-    <h3>Profile Statistics</h3>
+    <h3>Statistiques </h3>
 </div> 
 <div class="page-content"> 
     <section class="row">
         <div class="col-12 col-lg-9">
             <div class="row">
+                <!-- Carte 1 : Total chantiers -->
                 <div class="col-6 col-lg-3 col-md-6">
                     <div class="card">
                         <div class="card-body px-4 py-4-5">
                             <div class="row">
                                 <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
                                     <div class="stats-icon purple mb-2">
-                                        <i class="iconly-boldShow"></i>
+                                    <i class="ri-building-2-fill"></i>
+
+
                                     </div>
                                 </div>
                                 <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                    <h6 class="text-muted font-semibold">Profile Views</h6>
-                                    <h6 class="font-extrabold mb-0">112.000</h6>
+                                    <h6 class="text-muted font-semibold">Chantiers</h6>
+                                    <h6 class="font-extrabold mb-0"><%= totalChantiers ?? 0 %></h6>
                                 </div>
                             </div> 
                         </div>
                     </div>
                 </div>
+
+                <!-- Carte 2 : Total incidents -->
                 <div class="col-6 col-lg-3 col-md-6">
                     <div class="card"> 
                         <div class="card-body px-4 py-4-5">
@@ -40,30 +44,34 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                    <h6 class="text-muted font-semibold">Followers</h6>
-                                    <h6 class="font-extrabold mb-0">183.000</h6>
+                                    <h6 class="text-muted font-semibold">Incidents</h6>
+                                    <h6 class="font-extrabold mb-0"><%= totalIncidents ?? 0 %></h6>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Carte 3 : Incidents critiques -->
                 <div class="col-6 col-lg-3 col-md-6">
                     <div class="card">
                         <div class="card-body px-4 py-4-5">
                             <div class="row">
                                 <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                    <div class="stats-icon green mb-2">
+                                    <div class="stats-icon red mb-2">
                                         <i class="iconly-boldAdd-User"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                    <h6 class="text-muted font-semibold">Following</h6>
-                                    <h6 class="font-extrabold mb-0">80.000</h6>
+                                    <h6 class="text-muted font-semibold">Incidents critiques</h6>
+                                    <h6 class="font-extrabold mb-0"><%= incidentsCritique ?? 0 %></h6>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Carte 4 : Inspections -->
                 <div class="col-6 col-lg-3 col-md-6">
                     <div class="card">
                         <div class="card-body px-4 py-4-5">
@@ -74,19 +82,21 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                    <h6 class="text-muted font-semibold">Saved Post</h6>
-                                    <h6 class="font-extrabold mb-0">112</h6>
+                                    <h6 class="text-muted font-semibold">Inspections</h6>
+                                    <h6 class="font-extrabold mb-0"><%= totalInspections ?? 0 %></h6>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Graphique principal : Répartition incidents par gravité -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Profile Visit</h4>
+                            <h4>Répartition des incidents (par mois de l'année en cours)</h4>
                         </div>
                         <div class="card-body">
                             <div id="chart-profile-visit"></div>
@@ -94,62 +104,66 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Petits charts + tableau derniers incidents -->
             <div class="row">
                 <div class="col-12 col-xl-4">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Profile Visit</h4>
+                            <h4>Chantiers par région</h4>
                         </div>
                         <div class="card-body">
-                            <div class="row">
+                            <!-- Europe -->
+                            <div class="row mb-3">
                                 <div class="col-7">
                                     <div class="d-flex align-items-center">
                                         <svg class="bi text-primary" width="32" height="32" fill="blue"
                                             style="width:10px">
-                                            <use
-                                                xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
+                                            <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
                                         </svg>
-                                        <h5 class="mb-0 ms-3">Europe</h5>
+                                        <h5 class="mb-0 ms-3">Outaouais</h5>
                                     </div>
                                 </div>
                                 <div class="col-5">
-                                    <h5 class="mb-0 text-end">862</h5>
+                                    <h5 class="mb-0 text-end">8</h5>
                                 </div>
                                 <div class="col-12">
                                     <div id="chart-europe"></div>
                                 </div>
                             </div>
-                            <div class="row">
+
+                            <!-- America -->
+                            <div class="row mb-3">
                                 <div class="col-7">
                                     <div class="d-flex align-items-center">
                                         <svg class="bi text-success" width="32" height="32" fill="blue"
                                             style="width:10px">
-                                            <use
-                                                xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
+                                            <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
                                         </svg>
-                                        <h5 class="mb-0 ms-3">America</h5>
+                                        <h5 class="mb-0 ms-3">Québec</h5>
                                     </div>
                                 </div>
                                 <div class="col-5">
-                                    <h5 class="mb-0 text-end">375</h5>
+                                    <h5 class="mb-0 text-end">3</h5>
                                 </div>
                                 <div class="col-12">
                                     <div id="chart-america"></div>
                                 </div>
                             </div>
+
+                            <!-- Indonesia -->
                             <div class="row">
                                 <div class="col-7">
                                     <div class="d-flex align-items-center">
                                         <svg class="bi text-danger" width="32" height="32" fill="blue"
                                             style="width:10px">
-                                            <use
-                                                xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
+                                            <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
                                         </svg>
-                                        <h5 class="mb-0 ms-3">Indonesia</h5>
+                                        <h5 class="mb-0 ms-3">Laval</h5>
                                     </div>
                                 </div>
                                 <div class="col-5">
-                                    <h5 class="mb-0 text-end">1025</h5>
+                                    <h5 class="mb-0 text-end">1</h5>
                                 </div>
                                 <div class="col-12">
                                     <div id="chart-indonesia"></div>
@@ -158,48 +172,51 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Derniers incidents -->
                 <div class="col-12 col-xl-8">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Latest Comments</h4>
+                            <h4>Derniers incidents</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover table-lg">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Comment</th>
+                                            <th>Reporter</th>
+                                            <th>Incident</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="col-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar avatar-md">
-                                                        <img src="./assets/compiled/jpg/5.jpg">
-                                                    </div>
-                                                    <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                                                </div>
-                                            </td>
-                                            <td class="col-auto">
-                                                <p class=" mb-0">Congratulations on your graduation!</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar avatar-md">
-                                                        <img src="./assets/compiled/jpg/2.jpg">
-                                                    </div>
-                                                    <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                                                </div>
-                                            </td>
-                                            <td class="col-auto">
-                                                <p class=" mb-0">Wow amazing design! Can you make another tutorial for
-                                                    this design?</p>
-                                            </td>
-                                        </tr>
+                                        <% if (lastIncidents && lastIncidents.length) { %>
+                                            <% lastIncidents.forEach(inc => { %>
+                                                <tr>
+                                                    <td class="col-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar avatar-md">
+                                                                <!-- tu peux remplacer par inc.Reporter.avatar si présent -->
+                                                                <img src="/assets/compiled/jpg/5.jpg" alt="avatar">
+                                                            </div>
+                                                            <p class="font-bold ms-3 mb-0"><%= inc.Reporter ? inc.Reporter.name : "Anonyme" %></p>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-auto">
+                                                        <p class="mb-0">
+                                                            <strong><%= inc.title %></strong>
+                                                            <% if (inc.Chantier && inc.Chantier.name) { %>
+                                                                — <em><%= inc.Chantier.name %></em>
+                                                            <% } %>
+                                                        </p>
+                                                        <small class="text-muted"><%= new Date(inc.date).toLocaleString('fr-FR') %></small>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="2">Aucun incident récent.</td>
+                                            </tr>
+                                        <% } %>
                                     </tbody>
                                 </table>
                             </div>
@@ -208,6 +225,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Colonne de droite : profil + messages + visitors -->
         <div class="col-12 col-lg-3">
             <div class="card">
                 <div class="card-body py-4 px-4">
@@ -216,55 +235,76 @@
                             <img src="./assets/compiled/jpg/1.jpg" alt="Face 1">
                         </div>
                         <div class="ms-3 name">
-                            <h5 class="font-bold">John Duck</h5>
-                            <h6 class="text-muted mb-0">@johnducky</h6>
+                            <!-- si tu as req.user, remplacer par req.user.name côté controller -->
+                            <h5 class="font-bold"><%= (user && user.name) ? user.name : "Utilisateur" %></h5>
+                            <h6 class="text-muted mb-0">@<%= (user && user.email) ? user.email.split("@")[0] : "user" %></h6>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Notifications récentes (affichées comme messages) -->
             <div class="card">
                 <div class="card-header">
-                    <h4>Recent Messages</h4>
+                    <h4>Messages récents</h4>
                 </div>
                 <div class="card-content pb-4">
-                    <div class="recent-message d-flex px-4 py-3">
-                        <div class="avatar avatar-lg">
-                            <img src="./assets/compiled/jpg/4.jpg">
-                        </div>
-                        <div class="name ms-4">
-                            <h5 class="mb-1">Hank Schrader</h5>
-                            <h6 class="text-muted mb-0">@johnducky</h6>
-                        </div>
-                    </div>
-                    <div class="recent-message d-flex px-4 py-3">
-                        <div class="avatar avatar-lg">
-                            <img src="./assets/compiled/jpg/5.jpg">
-                        </div>
-                        <div class="name ms-4">
-                            <h5 class="mb-1">Dean Winchester</h5>
-                            <h6 class="text-muted mb-0">@imdean</h6>
-                        </div>
-                    </div>
-                    <div class="recent-message d-flex px-4 py-3">
-                        <div class="avatar avatar-lg">
-                            <img src="./assets/compiled/jpg/1.jpg">
-                        </div>
-                        <div class="name ms-4">
-                            <h5 class="mb-1">John Dodol</h5>
-                            <h6 class="text-muted mb-0">@dodoljohn</h6>
-                        </div>
-                    </div>
-                    <div class="px-4">
-                        <button class='btn btn-block btn-xl btn-outline-primary font-bold mt-3'>Start Conversation</button>
-                    </div>
+
+    <% if (lastNotifications && lastNotifications.length) { %>
+
+        <% lastNotifications.forEach(n => { %>
+            <div class="recent-message d-flex px-4 py-3 notification-item 
+                <%= n.isRead ? 'read' : 'unread' %>">
+
+                <div class="avatar avatar-lg">
+                    <img src="/assets/compiled/jpg/4.jpg" alt="notif">
                 </div>
+
+                <div class="name ms-4">
+                    <h5 class="mb-1">
+
+                        <%= n.title %>
+
+                        <% if (!n.isRead) { %>
+                            <i class="iconly-boldNotification bell-shake"></i>
+                        <% } %>
+
+                    </h5>
+
+                    <h6 class="text-muted mb-0">
+                        <% if (n.Sender) { %>
+                            <%= n.Sender.name %>
+                        <% } else { %>
+                            Système
+                        <% } %>
+                    </h6>
+
+                </div>
+
+            </div>
+        <% }) %>
+
+    <% } else { %>
+
+        <div class="px-4 py-3 text-muted">Aucune notification récente.</div>
+
+    <% } %>
+
+    <div class="px-4">
+        <button class='btn btn-block btn-xl btn-outline-primary font-bold mt-3'>
+            Start Conversation
+        </button>
+    </div>
+</div>
+
             </div> 
+
             <div class="card">
                 <div class="card-header">
                     <h4>Visitors Profile</h4>
                 </div>
                 <div class="card-body">
-                    <div id="chart-visitors-profile"></div>
+                    <div id="chart-visitors"></div>
                 </div>
             </div>
         </div>
@@ -287,6 +327,68 @@
     
 <!-- Need: Apexcharts -->
 <script src="../../assets/extensions/apexcharts/apexcharts.min.js"></script>
+
+<script>
+/* === Préparer les données venant du serveur (sécurisé) ===
+   Assure-toi que les variables EJS existent côté controller.
+*/
+const totalChantiers = "<%= JSON.stringify(totalChantiers ?? 0) %>";
+const totalIncidents = "<%= JSON.stringify(totalIncidents ?? 0) %>";
+const incidentsCritique = "<%= JSON.stringify(incidentsCritique ?? 0) %>";
+
+/* Si tu as incidentsModere / incidentsMineur, on peut les utiliser aussi.
+   On met des valeurs par défaut à 0 si elles sont absentes.
+*/
+const incidentsModere = "<%= JSON.stringify(typeof incidentsModere !== 'undefined' ? incidentsModere : 0) %>";
+const incidentsMineur = "<%= JSON.stringify(typeof incidentsMineur !== 'undefined' ? incidentsMineur : 0) %>";
+
+/* === Chart principal : camembert répartition par gravité === */
+document.addEventListener("DOMContentLoaded", function () {
+    const options = {
+        series: [incidentsCritique, incidentsModere, incidentsMineur],
+        chart: {
+            type: 'donut',
+            height: 320
+        },
+        labels: ['Critique', 'Modéré', 'Mineur'],
+        legend: {
+            position: 'bottom'
+        },
+        responsive: [{
+            breakpoint: 768,
+            options: {
+                chart: { height: 260 },
+                legend: { position: 'bottom' }
+            }
+        }]
+    };
+
+    const chart = new ApexCharts(document.querySelector("#chart-profile-visit"), options);
+    chart.render();
+
+    // Petits charts région (placeholder small radial bars)
+    const optSmall = (selector) => ({
+        chart: { height: 80, type: 'radialBar' },
+        series: [Math.floor(Math.random()*100)+20], // valeurs placeholder — tu peux remplacer par vraies données
+        plotOptions: { radialBar: { hollow: { size: '60%' } } },
+        stroke: { lineCap: 'round' }
+    });
+
+    new ApexCharts(document.querySelector("#chart-europe"), optSmall("#chart-europe")).render();
+    new ApexCharts(document.querySelector("#chart-america"), optSmall("#chart-america")).render();
+    new ApexCharts(document.querySelector("#chart-indonesia"), optSmall("#chart-indonesia")).render();
+
+    // Visitors profile mini chart (placeholder)
+    const visitorsOptions = {
+        series: [44, 55, 41],
+        chart: { type: 'bar', height: 160 },
+        plotOptions: { bar: { horizontal: false, columnWidth: '45%' } },
+        xaxis: { categories: ['A', 'B', 'C'] }
+    };
+    new ApexCharts(document.querySelector("#chart-visitors-profile"), visitorsOptions).render();
+});
+</script>
+
 <script src="../../assets/static/js/pages/dashboard.js"></script>
 
 </body>

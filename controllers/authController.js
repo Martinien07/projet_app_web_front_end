@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import  { User } from "../models/relation.js";
 
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -12,8 +11,6 @@ export const login = async (req, res) => {
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.redirect("/login?error=Utilisateur+non+trouvé");
-
-    
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -30,7 +27,7 @@ export const login = async (req, res) => {
       { expiresIn: "200h" }
     );
 
-    //  Stocker le token dans la session
+    // Stocker session
     req.session.token = token;
     req.session.user = {
       id: user.id,
@@ -41,19 +38,20 @@ export const login = async (req, res) => {
       status: user.status
     };
 
+   
+    req.session.userId = user.id;
 
-    //  Mot de passe temporaire → redirection spéciale
-    if (isDefault) {
-      return res.redirect("/auth/change-password");
-    }
-
-    //  Connexion OK → dashboard
-    return res.redirect("/");
+    // Sauvegarde session avant redirect
+    req.session.save(() => {
+      if (isDefault) return res.redirect("/auth/change-password");
+      return res.redirect("/");
+    });
 
   } catch (error) {
     return res.redirect("/login?error=" + encodeURIComponent(error.message));
   }
 };
+
 
 
 
