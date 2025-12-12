@@ -11,14 +11,16 @@ export const login = async (req, res) => {
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.render("auth/auth-login", { error: "Utilisateur non trouvé", title:"Log in Utilisateur non trouvé" });
+      return res.redirect("/login?error=Utilisateur+non+trouvé");
+
+    
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     const isDefault = password === process.env.RESET_DEFAULT_PASSWORD;
 
     if (!isMatch && !isDefault) {
-      return res.render("auth/auth-login", { error: "Mot de passe incorrect",  title:"Log in  Mot de passe incorrect" });
+      return res.redirect("/login?error=Mot+de+passe+incorrect");
     }
 
     // Générer token JWT
@@ -32,9 +34,13 @@ export const login = async (req, res) => {
     req.session.token = token;
     req.session.user = {
       id: user.id,
+      name: user.name,
       email: user.email,
-      access: user.access
+      phone: user.phone,
+      access: user.access,
+      status: user.status
     };
+
 
     //  Mot de passe temporaire → redirection spéciale
     if (isDefault) {
@@ -45,7 +51,7 @@ export const login = async (req, res) => {
     return res.redirect("/");
 
   } catch (error) {
-    return res.render("auth/auth-login", { error: error.message,  title:error.message });
+    return res.redirect("/login?error=" + encodeURIComponent(error.message));
   }
 };
 

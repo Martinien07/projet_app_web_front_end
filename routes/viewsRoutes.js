@@ -94,15 +94,14 @@ router.get("/auth-forgot-password", (req, res) => {
 });
 
 
-
 router.get("/login", (req, res) => {
-  const { error, success } = req.query;
-
-  res.render("auth/auth-login", {
-    error: error || null,
-    success: success || null,
-    title: "Connexion"
-  });
+    res.render("auth/auth-login", {
+        page: "auth-login",
+        pageGroup: "Authentification",
+        title: "Connexion utilisateur",
+        error: req.query.error || null,
+        success: req.query.success || null,
+    });
 });
 
 

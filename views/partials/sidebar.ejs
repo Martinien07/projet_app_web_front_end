@@ -195,7 +195,7 @@
                     <a href="/users/list-user" class="submenu-link">Tous les users</a>
                 </li>
                 <li class="submenu-item">
-                    <a href="/profile" class="submenu-link">Mon profil</a>
+                    <a href="/users/profile" class="submenu-link">Mon profil</a>
                 </li>
             </ul>
         </li>
@@ -228,7 +228,7 @@
 
                         <div class="ms-3 name">
                             <h5 class="font-bold"><%  %></h5>
-                            <h6 class="text-muted mb-0">@<% %></h6>
+                            <h6 class="text-muted mb-0">@<%= user ? user.name : "" %></h6>
 
                             <a href="/auth/logout" class="btn icon icon-left btn-danger mt-2">
                                 Déconnexion

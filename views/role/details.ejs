@@ -1,0 +1,122 @@
+<%- include("../partials/sidebar") %>
+
+</div>
+</div>
+
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+  <div class="page-title">
+    <div class="row">
+      <div class="col-12 col-md-6 order-md-1 order-last">
+        <h3>Détails du rôle : <%= role.name %></h3>
+        <p class="text-subtitle text-muted">
+          Informations complètes sur le rôle sélectionné.
+        </p>
+      </div>
+
+      <div class="col-12 col-md-6 order-md-2 order-first">
+        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/roles/list">Gestion des rôles</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Détails du rôle</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title"><%= role.name %></h4>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+
+        <!-- Nom du rôle -->
+        <div class="col-md-6 col-12">
+          <div class="mb-3">
+            <label class="form-label"><strong>Nom du rôle</strong></label>
+            <p class="form-control-static"><%= role.name %></p>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="col-md-6 col-12">
+          <div class="mb-3">
+            <label class="form-label"><strong>Description</strong></label>
+            <p class="form-control-static"><%= role.description || "Aucune description" %></p>
+          </div>
+        </div>
+
+        <!-- Nombre d'utilisateurs (si fourni par le controller) -->
+        <% if (typeof role.userCount !== "undefined") { %>
+        <div class="col-md-6 col-12">
+          <div class="mb-3">
+            <label class="form-label"><strong>Utilisateurs assignés</strong></label>
+            <span class="badge bg-primary"><%= role.userCount %> utilisateur(s)</span>
+          </div>
+        </div>
+        <% } %>
+
+        <!-- Dates -->
+        <div class="col-md-6 col-12">
+          <div class="mb-3">
+            <label class="form-label"><strong>Créé le</strong></label>
+            <p class="form-control-static">
+              <%= role.createdAt.toLocaleDateString() %>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-12">
+          <div class="mb-3">
+            <label class="form-label"><strong>Mis à jour le</strong></label>
+            <p class="form-control-static">
+              <%= role.updatedAt.toLocaleDateString() %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="col-12 d-flex justify-content-end mt-4">
+          <a href="/roles/edit/<%= role.id %>" class="btn btn-primary me-2">
+            <i class="bi bi-pen-fill"></i> Modifier
+          </a>
+
+          <a href="/roles/delete/<%= role.id %>" class="btn btn-danger btn-delete">
+            <i class="bi bi-trash-fill"></i> Supprimer
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script>
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".btn-delete")) {
+        if (!confirm("Voulez-vous vraiment supprimer ce rôle ?")) {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+
+</body>
+</html>
