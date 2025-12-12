@@ -132,34 +132,6 @@ router.get("/chantiers/assign", (req, res) => {
     });
 });
 
-//  Incidents
-router.get("/incidents", (req, res) => {
-    res.render("incidents/index", {
-        page: "incidents_list",
-        pageGroup: "incidents"
-    });
-});
-
-router.get("/incidents/add", (req, res) => {
-    res.render("incidents/add", {
-        page: "incidents_add",
-        pageGroup: "incidents"
-    });
-});
-
-router.get("/incidents/mine", (req, res) => {
-    res.render("incidents/mine", {
-        page: "incidents_mine",
-        pageGroup: "incidents"
-    });
-});
-
-router.get("/incidents/sites", (req, res) => {
-    res.render("incidents/sites", {
-        page: "incidents_sites",
-        pageGroup: "incidents"
-    });
-});
 
 //  Inspections
 router.get("/inspections", (req, res) => {
