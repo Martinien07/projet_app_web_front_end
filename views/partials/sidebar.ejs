@@ -138,22 +138,16 @@
         <!-- INSPECTIONS -->
         <li class="sidebar-item has-sub <%= pageGroup === 'inspections' ? 'active' : '' %>">
             <a href="#" class='sidebar-link'>
-                <i class="bi bi-grid-1x2-fill"></i>
+                <i class="bi bi-clipboard-check-fill"></i>
                 <span>Inspections</span>
             </a>
 
             <ul class="submenu">
                 <li class="submenu-item">
-                    <a href="/inspections" class="submenu-link">Toutes les inspections</a>
+                    <a href="/inspections/list" class="submenu-link">Toutes les inspections</a>
                 </li>
                 <li class="submenu-item">
-                    <a href="/inspections/add" class="submenu-link">Ajouter une inspection</a>
-                </li>
-                <li class="submenu-item">
-                    <a href="/inspections/mine" class="submenu-link">Mes inspections</a>
-                </li>
-                <li class="submenu-item">
-                    <a href="/inspections/sites" class="submenu-link">Inspections sur mes sites</a>
+                    <a href="/inspections/create_form" class="submenu-link">Nouvelle inspection</a>
                 </li>
             </ul>
         </li>
