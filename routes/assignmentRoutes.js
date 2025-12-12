@@ -8,12 +8,12 @@ import {
     getAssignmentById,
     showEditAssignmentForm,
     updateAssignment,
-    deleteAssignment
+    deleteAssignment,
+    listChantiersOfConnectedUser
 } from "../controllers/assignmentController.js";
 
 import { isAuthenticated } from "../middlewares/authSession.js";
 
-<<<<<<< HEAD
 import { assignmentValidationRules, validateAssignment,assignmentValidationRulesUpdate, validateAssignmentUpdate } from "../validations/assignmentValidator.js";
 
 const router = express.Router();
@@ -33,16 +33,8 @@ router.post("/create",
     addAssignment
 );
 
-/* ------------------------------------------
-   Liste de toutes les affectations
--------------------------------------------*/
-router.get("/list-assignment", isAuthenticated, getAllAssignments);
-=======
-import { getAllAssignments, addAssignment, getAssignmentById, updateAssignment, deleteAssignment, listChantiersOfConnectedUser } from '../controllers/assignmentController.js';
-import { validateAssignment, validateAssignmentUpdate } from '../validations/assignmentValidator.js';
-import { isAuthenticated } from "../middlewares/authSession.js";
 
-const router = express.Router();
+
 //Route pour recuperer tous les assignments
 router.get('/',isAuthenticated, getAllAssignments);
 
@@ -60,23 +52,19 @@ router.get('/:userId',isAuthenticated, getAssignmentById);
 //Route pour modifier un assignments
 
 router.put('/:userId',isAuthenticated,validateAssignmentUpdate, updateAssignment);
->>>>>>> origin/notifications
 
 /* ------------------------------------------
    Détails d’une affectation
 -------------------------------------------*/
 router.get("/details/:id", isAuthenticated, getAssignmentById);
 
-<<<<<<< HEAD
 /* ------------------------------------------
    FORMULAIRE : Modifier une affectation
 -------------------------------------------*/
 router.get("/edit/:id", isAuthenticated, showEditAssignmentForm);
-=======
 //Route pour supprimer un assignments
 router.delete('/:id',isAuthenticated, deleteAssignment);
 
->>>>>>> origin/notifications
 
 /* ------------------------------------------
    ACTION : Modifier l’affectation

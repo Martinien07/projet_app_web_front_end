@@ -9,7 +9,6 @@ export const getAllAssignments = async (req, res) => {
             include: [User, Chantier, Role]
         });
 
-<<<<<<< HEAD
         res.render("assignments/list-assignment", {
             page: "assignments-list",
             title: "Liste des assignments",
@@ -18,11 +17,9 @@ export const getAllAssignments = async (req, res) => {
             success: req.query.success || null,
             assignments
         });
-=======
         if (!assignments || assignments.length === 0) {
             return res.status(404).json({ message: "Aucunes affectation trouvée pour cet utilisateur." });
         }
->>>>>>> origin/notifications
 
     } catch (error) {
         console.error(error);
@@ -245,8 +242,6 @@ export const deleteAssignment = async (req, res) => {
         console.error(err);
         res.status(500).send("Erreur serveur");
     }
-<<<<<<< HEAD
-=======
 }
 
 
@@ -288,5 +283,4 @@ export const listChantiersOfConnectedUser = async (req, res) => {
             error: error.message
         });
     }
->>>>>>> origin/notifications
 };
