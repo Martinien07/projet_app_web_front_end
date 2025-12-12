@@ -1,0 +1,203 @@
+<%- include("../partials/sidebar") %>
+</div></div>
+
+<div id="main">
+  <%- include("../partials/header") %>
+
+  <div class="page-heading">
+    <div class="page-title">
+      <div class="row">
+
+        <div class="col-12 col-md-6 order-md-1 order-last">
+          <h3><%= incident ? "Modifier un incident" : "Ajouter un incident" %></h3>
+          <p class="text-subtitle text-muted">
+            Gestion des incidents dans le système.
+          </p>
+
+        <% if (errors && errors.length > 0) { %>
+          <div class="alert alert-danger mt-2">
+            <ul>
+              <% errors.forEach(e => { %>
+                  <li><%= e.msg %></li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+
+        </div>
+
+        <div class="col-12 col-md-6 order-md-2 order-first">
+          <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                <%= incident ? "Modifier incident" : "Ajout incident" %>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <section id="multiple-column-form">
+    <div class="row match-height">
+      <div class="col-12">
+
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">
+              <%= incident ? "Modifier l'incident" : "Créer un incident" %>
+            </h4>
+          </div>
+
+          <div class="card-content">
+            <div class="card-body">
+
+              <form class="form"
+                    action="<%= incident ? '/incidents/update/' + incident.id : '/incidents/create' %>"
+                    method="POST">
+
+                <div class="row">
+
+                  <!-- Chantier -->
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mandatory">
+                      <label for="chantierId" class="form-label">Chantier</label>
+                      <select id="chantierId" name="chantierId" class="form-control" required>
+                        <option value="">Sélectionnez un chantier</option>
+                        <% chantiers.forEach(chantier => { %>
+                          <option value="<%= chantier.id %>" <%= (incident && incident.chantierId === chantier.id) ? 'selected' : '' %>>
+                            <%= chantier.name %> - <%= chantier.location %>
+                          </option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Titre -->
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mandatory">
+                      <label for="title" class="form-label">Titre</label>
+                      <input type="text" id="title" name="title" class="form-control"
+                             value="<%= (incident ? incident.title : (old ? old.title : '')) %>" required>
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="col-md-12 col-12">
+                    <div class="form-group mandatory">
+                      <label for="description" class="form-label">Description</label>
+                      <textarea id="description" name="description" rows="3" class="form-control" required><%= incident ? incident.description : (old ? old.description : '') %></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Gravité -->
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mandatory">
+                      <label class="form-label">Gravité</label>
+
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="severity" value="mineur"
+                              <%= (incident && incident.severity === 'mineur') || !incident ? "checked" : "" %>>
+                        <label class="form-check-label">Mineur</label>
+                      </div>
+
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="severity" value="modéré"
+                              <%= incident && incident.severity === 'modéré' ? "checked" : "" %>>
+                        <label class="form-check-label">Modéré</label>
+                      </div>
+
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="severity" value="critique"
+                              <%= incident && incident.severity === 'critique' ? "checked" : "" %>>
+                        <label class="form-check-label">Critique</label>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- Statut -->
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mandatory">
+                      <label class="form-label">Statut</label>
+
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="ouvert"
+                              <%= (incident && incident.status === 'ouvert') || !incident ? "checked" : "" %>>
+                        <label class="form-check-label">Ouvert</label>
+                      </div>
+
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="en_cours"
+                              <%= incident && incident.status === 'en_cours' ? "checked" : "" %>>
+                        <label class="form-check-label">En cours</label>
+                      </div>
+
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="résolu"
+                              <%= incident && incident.status === 'résolu' ? "checked" : "" %>>
+                        <label class="form-check-label">Résolu</label>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- Date -->
+                  <div class="col-md-6 col-12">
+                    <div class="form-group mandatory">
+                      <label for="date" class="form-label">Date</label>
+                      <input type="date" id="date" name="date" class="form-control"
+                             value="<%= incident ? incident.date.toISOString().split('T')[0] : (old ? old.date : '') %>"
+                             required>
+                    </div>
+                  </div>
+
+                  <!-- Photo (URL) -->
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="photo" class="form-label">Photo (URL)</label>
+                      <input type="text" id="photo" name="photo" class="form-control"
+                             value="<%= incident ? incident.photo : (old ? old.photo : '') %>">
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row mt-4">
+                  <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-1 mb-1">
+                      Enregistrer
+                    </button>
+
+                    <a href="/incidents/list-incident" class="btn btn-light-secondary me-1 mb-1">
+                      Annuler
+                    </a>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include("../partials/footer") %>
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script src="../../assets/extensions/jquery/jquery.min.js"></script>
+<script src="../../assets/extensions/parsleyjs/parsley.min.js"></script>
+<script src="../../assets/static/js/pages/parsley.js"></script>
+
+</body>
+</html>
