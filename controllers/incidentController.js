@@ -19,16 +19,7 @@ export const getAllIncidents = async (req, res) => {
     if (status) whereConditions.status = status;
     if (search) whereConditions.title = { [Op.like]: `%${search}%` };
 
-    // Restriction si pas admin
-    if (!req.user.Roles.some(role => role.name === "admin")) {
-      const userAssignments = await Assignment.findAll({
-        where: { userId: req.user.id, isActive: true },
-        attributes: ["chantierId"],
-      });
-
-      const chantierIds = userAssignments.map(a => a.chantierId);
-      whereConditions.chantierId = { [Op.in]: chantierIds };
-    }
+    // Tous les utilisateurs voient tous les incidents (sans restriction)
 
     const { count, rows: incidents } = await Incident.findAndCountAll({
       where: whereConditions,
@@ -48,8 +39,13 @@ export const getAllIncidents = async (req, res) => {
       distinct: true,
     });
 
-    res.status(200).json({
-      data: incidents,
+    res.render("incidents/list-incident", {
+      page: "incidents-list",
+      title: "Liste des incidents",
+      pageGroup: "incidents",
+      error: req.query.error || null,
+      success: req.query.success || null,
+      incidents,
       pagination: {
         currentPage: parseInt(page),
         totalPages: Math.ceil(count / limit),
@@ -58,8 +54,40 @@ export const getAllIncidents = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(400).render("error/error-400", {
+      page: "error-400",
+      title: "Erreur 400",
+      error: error.message
+    });
   }
+};
+
+
+// FORMULAIRE DE CRÉATION
+export const showAddIncidentForm = (req, res) => {
+
+  const errors = req.session.incidentErrors || null;
+  const old = req.session.incidentOld || null;
+
+  // Reset pour ne pas persister
+  req.session.incidentErrors = null;
+  req.session.incidentOld = null;
+
+  Chantier.findAll().then(chantiers => {
+    res.render("incidents/incident-form", { 
+      incident: null,
+      chantiers,
+      pageGroup: "incidents",
+      title: "Création d'un incident",
+      page: "Ajout d'un incident",
+      errors,
+      old
+    });
+  }).catch(err => {
+    console.error(err);
+    res.redirect("/incidents/list-incident?error=Erreur+chargement");
+  });
 };
 
 
@@ -68,25 +96,28 @@ export const getAllIncidents = async (req, res) => {
 export const declareIncident = async (req, res) => {
   try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) {
+      req.session.incidentErrors = errors.array();
+      req.session.incidentOld = req.body;
+      return res.redirect("/incidents/create_form");
+    }
 
     const { chantierId, title, description, severity, date, photo } = req.body;
 
     const chantier = await Chantier.findByPk(chantierId);
-    if (!chantier) return res.status(404).json({ message: "Chantier non trouvé" });
+    if (!chantier) return res.redirect("/incidents/create_form?error=Chantier+introuvable");
 
-    // Vérifier si affecté ou admin
-   /* const assignment = await Assignment.findOne({
-      where: { userId: req.user.id, chantierId, isActive:1 },
+    /* const assignment = await Assignment.findOne({
+      where: { userId: req.session.user.id, chantierId, isActive:1 },
     });
 
-    if (!assignment || !req.user.Roles.some(r => r.name === "admin")) {
-      return res.status(403).json({ message: "Vous n'êtes pas assigné à ce chantier" });
+    if (!assignment || !(req.session.user && req.session.user.access === "admin")) {
+      return res.redirect("/incidents/create_form?error=Accès+non+autorisé");
     }*/
 
     const incident = await Incident.create({
       chantierId,
-      reportedBy: req.user.id,
+      reportedBy: req.session.user.id,
       title,
       description,
       severity: severity || "mineur",
@@ -95,12 +126,10 @@ export const declareIncident = async (req, res) => {
       photo,
     });
 
-    res.status(201).json({
-      data: incident,
-      message: "Incident déclaré avec succès",
-    });
+    res.redirect("/incidents/list-incident?success=Incident+créé");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.redirect("/incidents/list-incident?error=Erreur+création");
   }
 };
 
@@ -123,24 +152,55 @@ export const getIncidentById = async (req, res) => {
       ],
     });
 
-    if (!incident) return res.status(404).json({ message: "Incident non trouvé" });
+    if (!incident) return res.redirect("/incidents/list-incident?error=Incident+introuvable");
 
-    // Vérification permissions
-    if (!req.user.Roles.some(r => r.name === "admin")) {
-      const assignment = await Assignment.findOne({
-        where: {
-          userId: req.user.id,
-          chantierId: incident.chantierId,
-          isActive: true,
-        },
-      });
+    // Tous les utilisateurs peuvent voir les détails (sans restriction)
 
-      if (!assignment) return res.status(403).json({ message: "Accès non autorisé" });
+    res.render("incidents/details", {
+      incident,
+      pageGroup: "incidents",
+      title: "Détails de l'incident",
+      page: "Détails",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erreur serveur");
+  }
+};
+
+
+// FORMULAIRE DE MODIFICATION
+export const showEditIncidentForm = async (req, res) => {
+  try {
+    const incident = await Incident.findByPk(req.params.id);
+
+    if (!incident) {
+      return res.redirect("/incidents/list-incident?error=Incident+introuvable");
     }
 
-    res.status(200).json({ data: incident });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const chantiers = await Chantier.findAll();
+
+    res.render("incidents/incident-form", {
+      incident,
+      chantiers,
+      pageGroup: "incidents",
+      title: "Modification d'un incident",
+      page: "Modifier l'incident",
+
+      error: req.query.error || null,
+      success: req.query.success || null,
+
+      errors: req.session.incidentErrors || null,
+      old: req.session.incidentOld || null,
+    });
+
+    // Nettoyage
+    req.session.incidentErrors = null;
+    req.session.incidentOld = null;
+
+  } catch (err) {
+    console.error(err);
+    res.redirect("/error/error-400");
   }
 };
 
@@ -153,18 +213,17 @@ export const updateIncident = async (req, res) => {
 
   try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) {
+      req.session.incidentErrors = errors.array();
+      req.session.incidentOld = req.body;
+      return res.redirect(`/incidents/edit/${id}`);
+    }
 
     const incident = await Incident.findByPk(id);
-    if (!incident) return res.status(404).json({ message: "Incident non trouvé" });
+    if (!incident) return res.redirect("/incidents/list-incident?error=Incident+introuvable");
 
-    const isDeclarant = incident.reportedBy === req.user.id;
-    const isAdminOrSupervisor = req.user.Roles.some(
-      r => r.name === "admin" || r.name === "superviseur"
-    );
-
-    if (!isDeclarant && !isAdminOrSupervisor) {
-      return res.status(403).json({ message: "Permissions insuffisantes" });
+    if (!(req.session.user && req.session.user.access === "admin")) {
+      return res.redirect("/incidents/list-incident?error=Permissions+insuffisantes");
     }
 
     await incident.update({
@@ -175,12 +234,10 @@ export const updateIncident = async (req, res) => {
       photo: photo ?? incident.photo,
     });
 
-    res.status(200).json({
-      message: "Incident modifié avec succès",
-      data: incident,
-    });
+    res.redirect("/incidents/list-incident?success=Incident+modifié");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.redirect("/incidents/list-incident?error=Erreur+modification");
   }
 };
 
@@ -192,13 +249,14 @@ export const deleteIncident = async (req, res) => {
 
   try {
     const incident = await Incident.findByPk(id);
-    if (!incident) return res.status(404).json({ message: "Incident non trouvé" });
+    if (!incident) return res.redirect("/incidents/list-incident?error=Incident+introuvable");
 
     await Incident.destroy({ where: { id } });
 
-    res.status(200).json({ message: "Incident supprimé avec succès" });
+    res.redirect("/incidents/list-incident?success=Incident+supprimé");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).send("Erreur serveur");
   }
 };
 
@@ -211,19 +269,17 @@ export const updateIncidentSeverity = async (req, res) => {
 
   try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.redirect(`/incidents/edit/${id}?error=Validation+échouée`);
 
     const incident = await Incident.findByPk(id);
-    if (!incident) return res.status(404).json({ message: "Incident non trouvé" });
+    if (!incident) return res.redirect("/incidents/list-incident?error=Incident+introuvable");
 
     await incident.update({ severity });
 
-    res.status(200).json({
-      message: "Gravité mise à jour",
-      data: incident,
-    });
+    res.redirect("/incidents/list-incident?success=Gravité+mise+à+jour");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.redirect("/incidents/list-incident?error=Erreur+mise+à+jour");
   }
 };
 
@@ -236,19 +292,17 @@ export const updateIncidentStatus = async (req, res) => {
 
   try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.redirect(`/incidents/edit/${id}?error=Validation+échouée`);
 
     const incident = await Incident.findByPk(id);
-    if (!incident) return res.status(404).json({ message: "Incident non trouvé" });
+    if (!incident) return res.redirect("/incidents/list-incident?error=Incident+introuvable");
 
     await incident.update({ status });
 
-    res.status(200).json({
-      message: "Statut mis à jour",
-      data: incident,
-    });
+    res.redirect("/incidents/list-incident?success=Statut+mis+à+jour");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.redirect("/incidents/list-incident?error=Erreur+mise+à+jour");
   }
 };
 
@@ -260,16 +314,14 @@ export const markIncidentAsResolved = async (req, res) => {
 
   try {
     const incident = await Incident.findByPk(id);
-    if (!incident) return res.status(404).json({ message: "Incident non trouvé" });
+    if (!incident) return res.redirect("/incidents/list-incident?error=Incident+introuvable");
 
     await incident.update({ status: "résolu" });
 
-    res.status(200).json({
-      message: "Incident résolu",
-      data: incident,
-    });
+    res.redirect("/incidents/list-incident?success=Incident+résolu");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.redirect("/incidents/list-incident?error=Erreur+mise+à+jour");
   }
 };
 
@@ -283,16 +335,7 @@ export const getIncidentStats = async (req, res) => {
 
     if (chantierId) whereConditions.chantierId = chantierId;
 
-    // Restriction si pas admin
-    if (!req.user.Roles.some(role => role.name === "admin")) {
-      const userAssignments = await Assignment.findAll({
-        where: { userId: req.user.id, isActive: true },
-        attributes: ["chantierId"],
-      });
-
-      const chantierIds = userAssignments.map(a => a.chantierId);
-      whereConditions.chantierId = { [Op.in]: chantierIds };
-    }
+    // Tous les utilisateurs voient les stats de tous les incidents (sans restriction)
 
     const incidents = await Incident.findAll({
       where: whereConditions,
@@ -320,8 +363,11 @@ export const getIncidentStats = async (req, res) => {
           : 0,
     };
 
-    res.status(200).json({ data: stats });
+    // Pour l'instant, render une vue simple pour stats, ou intégrer dans dashboard. Ici, on assume render json pour l'instant, ou créer une vue stats si besoin.
+    res.render("incidents/stats", { stats }); // À créer si besoin, sinon garder json
+    // res.status(200).json({ data: stats });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
