@@ -1,42 +1,65 @@
-//toutes les routes liees aux utilisateurs
-import express from 'express';
+// Toutes les routes liées aux assignments
+import express from "express";
 
+import {
+    getAllAssignments,
+    showAddAssignmentForm,
+    addAssignment,
+    getAssignmentById,
+    showEditAssignmentForm,
+    updateAssignment,
+    deleteAssignment
+} from "../controllers/assignmentController.js";
 
+import { isAuthenticated } from "../middlewares/authSession.js";
 
-import { getAllAssignments, addAssignment, getAssignmentById, updateAssignment, deleteAssignment } from '../controllers/assignmentController.js';
-import { validateAssignment, validateAssignmentUpdate } from '../validations/assignmentValidator.js';
+import { assignmentValidationRules, validateAssignment,assignmentValidationRulesUpdate, validateAssignmentUpdate } from "../validations/assignmentValidator.js";
 
-
-import { protect } from '../middlewares/authMiddleware.js';
 const router = express.Router();
-//Route pour recuperer tous les assignments
-router.get('/',protect, getAllAssignments);
 
-//Route pour ajouter un assignments
-router.post('/',protect, validateAssignment, addAssignment);
+/* ------------------------------------------
+   FORMULAIRE : Ajouter une nouvelle affectation
+-------------------------------------------*/
+router.get("/create_form", isAuthenticated, showAddAssignmentForm);
 
-//Route pour recuperer un assignments par userId
-router.get('/:userId',protect, getAssignmentById);
-//Route pour modifier un assignments
+/* ------------------------------------------
+   ACTION : Enregistrer une nouvelle affectation
+-------------------------------------------*/
+router.post("/create",
+    isAuthenticated,
+    assignmentValidationRules(),
+    validateAssignment,
+    addAssignment
+);
 
-router.put('/:userId',protect,validateAssignmentUpdate, updateAssignment);
+/* ------------------------------------------
+   Liste de toutes les affectations
+-------------------------------------------*/
+router.get("/list-assignment", isAuthenticated, getAllAssignments);
 
+/* ------------------------------------------
+   Détails d’une affectation
+-------------------------------------------*/
+router.get("/details/:id", isAuthenticated, getAssignmentById);
 
-//Route pour supprimer un assignments
-router.delete('/:id',protect, deleteAssignment);
+/* ------------------------------------------
+   FORMULAIRE : Modifier une affectation
+-------------------------------------------*/
+router.get("/edit/:id", isAuthenticated, showEditAssignmentForm);
 
+/* ------------------------------------------
+   ACTION : Modifier l’affectation
+-------------------------------------------*/
+router.post("/update/:id",
+    isAuthenticated,
+    assignmentValidationRulesUpdate(),
+    validateAssignmentUpdate,
+    updateAssignment
+);
+
+/* ------------------------------------------
+   Supprimer une affectation
+-------------------------------------------*/
+router.get("/delete/:id", isAuthenticated, deleteAssignment);
 
 export default router;
-
-
-//exemple pour ajouter assignments utilisation postman json
-
-/*
-{
-    "userId":1,
-    "chantierId":2,
-    "roleId":3,
-    "assignedAt":"2024-10-01T10:00:00Z",
-    "isActive":true
-}
-*/
