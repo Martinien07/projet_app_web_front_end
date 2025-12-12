@@ -189,3 +189,5 @@ export const updateUser = async (req, res) => {
     res.redirect("/users?error=Erreur+modification");
   }
 };
+
+

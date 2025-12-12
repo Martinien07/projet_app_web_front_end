@@ -219,6 +219,12 @@ export const updateAssignment = async (req, res) => {
     }
 };
 
+// les chantiers sur lesquels l'utilisateur connecté travaille ou a travaillé
+export const listChantiersOfConnectedUser = async (req, res) => {
+    try {
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
 
 /* =============================================================
    SUPPRIMER UN ASSIGNMENT
