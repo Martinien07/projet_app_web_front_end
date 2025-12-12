@@ -73,6 +73,7 @@
                         <td><%= new Date(item.createdAt).toLocaleDateString("fr-CA") %></td>
                         <td>
                             <a href="/notifications/<%= item.id %>" class="btn btn-sm btn-info">Voir</a>
+                            
                             <% if (!item.NotificationRecipients[0].isRead) { %>
                                 <a href="/notifications/read/<%= item.id %>" class="btn btn-sm btn-success">Marquer comme lu</a>
                             <% } %>

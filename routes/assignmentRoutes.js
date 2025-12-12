@@ -18,6 +18,11 @@ import { assignmentValidationRules, validateAssignment,assignmentValidationRules
 
 const router = express.Router();
 
+	
+// Liste des chantiers d'un utilisateur connecté
+
+router.get("/my-chantiers", isAuthenticated, listChantiersOfConnectedUser);
+
 /* ------------------------------------------
    FORMULAIRE : Ajouter une nouvelle affectation
 -------------------------------------------*/
@@ -33,25 +38,10 @@ router.post("/create",
     addAssignment
 );
 
-
-
-//Route pour recuperer tous les assignments
-router.get('/',isAuthenticated, getAllAssignments);
-
-//Route pour ajouter un assignments
-router.post('/',isAuthenticated, validateAssignment, addAssignment);
-
-
-// Liste des chantiers d'un utilisateur connecté
-
-router.get("/my-chantiers", isAuthenticated, listChantiersOfConnectedUser);
-
-
-//Route pour recuperer un assignments par userId
-router.get('/:userId',isAuthenticated, getAssignmentById);
-//Route pour modifier un assignments
-
-router.put('/:userId',isAuthenticated,validateAssignmentUpdate, updateAssignment);
+/* ------------------------------------------
+   Liste de toutes les affectations
+-------------------------------------------*/
+router.get("/list-assignment", isAuthenticated, getAllAssignments);
 
 /* ------------------------------------------
    Détails d’une affectation
@@ -62,9 +52,6 @@ router.get("/details/:id", isAuthenticated, getAssignmentById);
    FORMULAIRE : Modifier une affectation
 -------------------------------------------*/
 router.get("/edit/:id", isAuthenticated, showEditAssignmentForm);
-//Route pour supprimer un assignments
-router.delete('/:id',isAuthenticated, deleteAssignment);
-
 
 /* ------------------------------------------
    ACTION : Modifier l’affectation
