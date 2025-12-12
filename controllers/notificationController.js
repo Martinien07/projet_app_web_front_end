@@ -1,355 +1,326 @@
-import { where } from "sequelize";
-import { NotificationRecipient, Notification, Assignment, User } from "../models/relation.js";
+import { Notification, NotificationRecipient, Assignment, User, Chantier } from "../models/relation.js";
 
+/* ---------------------------------------------
+   FORMULAIRE DE CRÉATION D'UNE NOTIFICATION
+---------------------------------------------- */
+export const showAddNotificationForm = (req, res) => {
 
-//Pour créer une notification 
+    const errors = req.session.notificationErrors || null;
+    const old = req.session.notificationOld || null;
 
-export const createNotification = async (req, res) => {
-  try {
-    const {
-      senderId,
-      title,
-      message,
-      scope,       // "user" | "chantier" | "list" | "global"
-      level,       // "all" | "private" | "hprivate"
-      target       // userId | chantierId | [ids] | "all"
-    } = req.body;
+    // Reset pour ne pas persister
+    req.session.notificationErrors = null;
+    req.session.notificationOld = null;
 
-    // --- VALIDATIONS MINIMALES ---
-    if (!title || !message || !scope) {
-      return res.status(400).json({ message: "title, message et scope sont requis" });
-    }
-
-    // Valeur par défaut
-    const finalLevel = level || "all";
-
-   
-    // 1) CREATION DE LA NOTIFICATION
-
-    const notification = await Notification.create({
-      senderId: senderId || null,
-      title,
-      message,
-      scope,
-      level: finalLevel,
-      target: target || "all",
+    res.render("notifications/notification-form", { 
+        notification: null,
+        pageGroup: "notifications",
+        title: "Création d'une notification",
+        page: "Ajout d'une notification",
+        errors,
+        old
     });
+};
 
-  
-    // 2) DÉTERMINATION DES DESTINATAIRES
+/* ---------------------------------------------
+   CRÉER UNE NOTIFICATION
+---------------------------------------------- */
+export const addNotification = async (req, res) => {
+    try {
+        const { senderId, title, message, scope, level, target } = req.body;
 
-    let usersToNotify = [];
+        // Validation minimale
+        if (!title || !message || !scope) {
+            req.session.notificationErrors = [{ msg: "title, message et scope sont requis" }];
+            req.session.notificationOld = req.body;
+            return res.redirect("/notifications/create_form");
+        }
 
-    /** ---- SCOPE : user ---- **/
-    if (scope === "user") {
-      if (!target) {
-        return res.status(400).json({ message: "target doit contenir userId pour scope=user" });
-      }
+        const finalLevel = level || "all";
 
-      usersToNotify = [target];
-    }
-
-    /** ---- SCOPE : chantier ---- **/
-    if (scope === "chantier") {
-      if (!target) {
-        return res.status(400).json({ message: "target doit être chantierId pour scope=chantier" });
-      }
-
-      const assignments = await Assignment.findAll({
-        where: { chantierId: target }
-      });
-
-      usersToNotify = assignments.map(a => a.userId);
-
-      if (usersToNotify.length === 0) {
-        return res.status(404).json({
-          message: "Aucun utilisateur assigné à ce chantier"
+        // 1) Création de la notification
+        const notification = await Notification.create({
+            senderId: senderId || null,
+            title,
+            message,
+            scope,
+            level: finalLevel,
+            target: target || "all",
         });
-      }
+
+        // 2) Déterminer les destinataires
+        let usersToNotify = [];
+
+        if (scope === "user") {
+            if (!target) {
+                req.session.notificationErrors = [{ msg: "target doit contenir userId pour scope=user" }];
+                req.session.notificationOld = req.body;
+                return res.redirect("/notifications/create_form");
+            }
+            usersToNotify = [target];
+        }
+
+        if (scope === "chantier") {
+            if (!target) {
+                req.session.notificationErrors = [{ msg: "target doit être chantierId pour scope=chantier" }];
+                req.session.notificationOld = req.body;
+                return res.redirect("/notifications/create_form");
+            }
+
+            const assignments = await Assignment.findAll({ where: { chantierId: target } });
+            usersToNotify = assignments.map(a => a.userId);
+
+            if (usersToNotify.length === 0) {
+                req.session.notificationErrors = [{ msg: "Aucun utilisateur assigné à ce chantier" }];
+                req.session.notificationOld = req.body;
+                return res.redirect("/notifications/create_form");
+            }
+        }
+
+        if (scope === "list") {
+            if (!Array.isArray(target)) {
+                req.session.notificationErrors = [{ msg: "target doit être une liste d'IDs pour scope=list" }];
+                req.session.notificationOld = req.body;
+                return res.redirect("/notifications/create_form");
+            }
+            usersToNotify = target;
+        }
+
+        if (scope === "global") {
+            const allUsers = await User.findAll({ attributes: ["id"] });
+            usersToNotify = allUsers.map(u => u.id);
+        }
+
+        usersToNotify = [...new Set(usersToNotify)];
+
+        // 3) Création des enregistrements NotificationRecipients
+        const recipientsData = usersToNotify.map(userId => ({
+            notificationId: notification.id,
+            recipientId: userId,
+            isRead: false,
+            readAt: null
+        }));
+
+        await NotificationRecipient.bulkCreate(recipientsData);
+
+        res.redirect("/notifications/list-notifications?success=Notification+créée");
+        
+    } catch (error) {
+        console.error(error);
+        res.redirect("/notifications/list-notifications?error=Erreur+création");
     }
-
-    /** ---- SCOPE : list ---- **/
-    if (scope === "list") {
-      if (!Array.isArray(target)) {
-        return res.status(400).json({ message: "target doit être une liste d'IDs pour scope=list" });
-      }
-      usersToNotify = target;
-    }
-
-    /** ---- SCOPE : global ---- **/
-    if (scope === "global") {
-      const allUsers = await User.findAll({ attributes: ["id"] });
-      usersToNotify = allUsers.map(u => u.id);
-    }
-
-    // Retirer doublons si list + chantier overlappent
-    usersToNotify = [...new Set(usersToNotify)];
-
-
-    // 3) CREATION DES ENREGISTREMENTS DANS NotificationRecipients
-
-    const recipientsData = usersToNotify.map((userId) => ({
-      notificationId: notification.id,
-      recipientId:userId,
-      isRead: false,
-      readAt: null
-    }));
-
-    await NotificationRecipient.bulkCreate(recipientsData);
-
-
-    // 4) REPONSE
-
-
-    const inforRecepients= await User.findAll({ where: {id:usersToNotify },
-                                              attributes:["id","name","email"]
-  })
-
-    return res.status(201).json({
-      message: "Notification créée avec succès",
-      notification,
-      recipients: inforRecepients
-    });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erreur serveur", error });
-  }
 };
 
 
 
+/* ---------------------------------------------
+   LISTE DE TOUTES LES NOTIFICATIONS DU SYSTÈME
+---------------------------------------------- */
+export const getAllNotifications = async (req, res) => {
+    try {
+        // Récupérer toutes les notifications, avec leurs destinataires
+        const notifications = await Notification.findAll({
+            include: [
+                {
+                    model: NotificationRecipient,
+                    as: "NotificationRecipients",
+                    attributes: ["recipientId", "isRead", "readAt"]
+                }
+            ],
+            order: [["createdAt", "DESC"]]
+        });
 
-//Pour obtenir la listes des notifications en fonction des critères 
-export const getNotifications = async (req, res) => {
-  try {
-    const {
-      scope,      // user | chantier | list | global  (OPTIONNEL)
-      target,     // userId | chantierId | array | "all" (OPTIONNEL)
-      level,      // all | private | hprivate (OPTIONNEL)
-      isRead      // true | false (OPTIONNEL)
-    } = req.query;
+        res.render("notifications/list-notification", {
+            pageGroup: "notifications",
+            title: "Liste des notifications",
+            page: "notifications",
+            notifications,
+            error: req.query.error || null,
+            success: req.query.success || null
+        });
 
-    const userId = req.user.id; // utilisateur connecté
-
-    // ---------------------------
-    // 1) Construire la condition de base
-    // ---------------------------
-
-    const whereNotif = {};
-    const whereRecipient = { userId };
-
-    // ---- Filtre sur le niveau ----
-    if (level) {
-      whereNotif.level = level;
+    } catch (error) {
+        console.error(error);
+        res.status(500).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur serveur",
+            error: error.message
+        });
     }
-
-    // ---- Filtre lu / non lu ----
-    if (isRead === "true") whereRecipient.isRead = true;
-    if (isRead === "false") whereRecipient.isRead = false;
-
-    // ---------------------------
-    // 2) Filtrer par scope + target
-    // ---------------------------
-
-    if (scope) {
-      whereNotif.scope = scope;
-
-      /** ---------------- SCOPE = user ---------------- */
-      if (scope === "user") {
-        if (!target) {
-          return res.status(400).json({
-            message: "target doit être userId pour scope=user"
-          });
-        }
-
-        whereNotif.target = target;
-      }
-
-      /** ---------------- SCOPE = chantier ---------------- */
-      if (scope === "chantier") {
-        if (!target) {
-          return res.status(400).json({
-            message: "target doit contenir chantierId pour scope=chantier"
-          });
-        }
-
-        whereNotif.target = target;
-      }
-
-      /** ---------------- SCOPE = list ---------------- */
-      if (scope === "list") {
-        if (!target) {
-          return res.status(400).json({
-            message: "target doit être une liste d'IDs"
-          });
-        }
-
-        // target = "1,5,8" dans Postman ? → convertir automatiquement en tableau
-        const listIds = Array.isArray(target)
-          ? target
-          : String(target).split(",").map(Number);
-
-        whereNotif.target = JSON.stringify(listIds);
-      }
-
-      /** ---------------- SCOPE = global ---------------- */
-      if (scope === "global") {
-        whereNotif.target = "all";
-      }
-    }
-
-    // ---------------------------
-    // 3) Exécution de la requête
-    // ---------------------------
-
-    const notifications = await Notification.findAll({
-      where: whereNotif,
-      include: [
-        {
-          model: NotificationRecipient,
-          as: "NotificationRecipients",
-          required: true,
-          where: whereRecipient,
-          attributes: ["userId", "isRead", "readAt"]
-        }
-      ],
-      order: [["createdAt", "DESC"]]
-    });
-
-    return res.status(200).json({
-      count: notifications.length,
-      data: notifications
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Erreur serveur", error });
-  }
-};
-
-
-
-// supprimé une notification - suppression en cascade
-
-export const deleteNotification = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const deleted = await Notification.destroy({
-      where: { id }
-    });
-
-    if (!deleted) {
-      return res.status(404).json({ message: "Notification non trouvée" });
-    }
-
-    return res.status(200).json({ message: "Notification supprimée avec succès" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Erreur serveur", error });
-  }
 };
 
 
 
 
 
-//marquer comme lu 
 
 
-export const markNotificationAsRead = async (req, res) => {
-  try {
-    const { notificationId } = req.params;
-    const recipientId = req.user.id; // user connecté (token)
 
-    // Vérifier que la notification existe dans la table des destinataires
-    const record = await NotificationRecipient.findOne({
-      where: {
-        notificationId,
-        recipientId
-      }
-    });
 
-    if (!record) {
-      return res.status(404).json({
-        message: "Cette notification n'est pas attribuée à cet utilisateur"
-      });
+
+
+
+/* ---------------------------------------------
+   LISTE DE TOUTES LES NOTIFICATIONS
+---------------------------------------------- */
+export const getAllNotificationsById = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Récupérer notifications assignées à l'utilisateur
+        const notifications = await Notification.findAll({
+            include: [{
+                model: NotificationRecipient,
+                as: "NotificationRecipients",
+                required: true,
+                where: { recipientId: userId },
+                attributes: ["userId", "isRead", "readAt"]
+            }],
+            order: [["createdAt", "DESC"]]
+        });
+
+        res.render("notifications/list-notifications", {
+            pageGroup: "notifications",
+            title: "Liste des notifications",
+            page: "Notifications",
+            notifications,
+            error: req.query.error || null,
+            success: req.query.success || null
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur serveur",
+            error: error.message
+        });
     }
-
-    // Si déjà lue, inutile de réécrire
-    if (record.isRead) {
-      return res.status(200).json({
-        message: "Notification déjà marquée comme lue",
-        notificationId,
-        recipientId
-      });
-    }
-
-    // Marquer comme lu
-    await record.update({
-      isRead: true,
-      readAt: new Date()
-    });
-
-    return res.status(200).json({
-      message: "Notification marquée comme lue",
-      notificationId,
-      recipientId
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Erreur serveur", error });
-  }
 };
 
-
-
+/* ---------------------------------------------
+   DÉTAILS D’UNE NOTIFICATION
+---------------------------------------------- */
 export const getNotificationById = async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const notification = await Notification.findByPk(req.params.id, {
+            include: [{
+                model: NotificationRecipient,
+                as: "NotificationRecipients",
+                attributes: ["id", "userId", "isRead", "readAt"]
+            }]
+        });
 
-    // Recherche de la notification avec ses destinataires
-    const notification = await Notification.findOne({
-      where: { id },
-      include: [
-        {
-          model: NotificationRecipient,
-          as: "NotificationRecipients",
-          attributes: ["id", "userId", "isRead", "readAt"]
+        if (!notification) {
+            return res.redirect("/notifications/list-notifications?error=Notification+introuvable");
         }
-      ]
-    });
 
-    if (!notification) {
-      return res.status(404).json({ message: "Notification introuvable" });
+        res.render("notifications/details", {
+            notification,
+            pageGroup: "notifications",
+            title: "Détails de la notification",
+            page: "Détails",
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.redirect("/notifications/list-notifications?error=Erreur+serveur");
     }
-
-    return res.status(200).json({
-      message: "Notification récupérée avec succès",
-      data: notification
-    });
-
-  } catch (error) {
-    console.error("Erreur getNotificationById :", error);
-    return res.status(500).json({ message: "Erreur serveur", error });
-  }
 };
 
+/* ---------------------------------------------
+   FORMULAIRE DE MODIFICATION D'UNE NOTIFICATION
+---------------------------------------------- */
+export const showEditNotificationForm = async (req, res) => {
+    try {
+        const notification = await Notification.findByPk(req.params.id);
 
+        if (!notification) {
+            return res.redirect("/notifications/list-notifications?error=Notification+introuvable");
+        }
 
+        res.render("notifications/notification-form", {
+            notification,
+            pageGroup: "notifications",
+            title: "Modification d'une notification",
+            page: "Modifier la notification",
+            errors: req.session.notificationErrors || null,
+            old: req.session.notificationOld || null
+        });
 
+        req.session.notificationErrors = null;
+        req.session.notificationOld = null;
 
+    } catch (error) {
+        console.error(error);
+        res.redirect("/notifications/list-notifications?error=Erreur+serveur");
+    }
+};
 
+/* ---------------------------------------------
+   METTRE À JOUR UNE NOTIFICATION
+---------------------------------------------- */
+export const updateNotification = async (req, res) => {
+    try {
+        const { title, message, scope, level, target } = req.body;
 
+        await Notification.update(
+            { title, message, scope, level, target },
+            { where: { id: req.params.id } }
+        );
 
+        res.redirect("/notifications/list-notifications?success=Notification+modifiée");
 
+    } catch (error) {
+        console.error(error);
+        res.redirect("/notifications/list-notifications?error=Erreur+modification");
+    }
+};
 
+/* ---------------------------------------------
+   SUPPRIMER UNE NOTIFICATION
+---------------------------------------------- */
+export const deleteNotification = async (req, res) => {
+    try {
+        const notification = await Notification.findByPk(req.params.id);
 
+        if (!notification) {
+            return res.redirect("/notifications/list-notifications?error=Notification+introuvable");
+        }
 
+        await notification.destroy();
+        res.redirect("/notifications/list-notifications?success=Notification+supprimée");
 
+    } catch (error) {
+        console.error(error);
+        res.redirect("/notifications/list-notifications?error=Erreur+suppression");
+    }
+};
 
+/* ---------------------------------------------
+   MARQUER UNE NOTIFICATION COMME LUE
+---------------------------------------------- */
+export const markNotificationAsRead = async (req, res) => {
+    try {
+        const notificationId = req.params.id;
+        const recipientId = req.user.id;
 
+        const record = await NotificationRecipient.findOne({
+            where: { notificationId, recipientId }
+        });
 
+        if (!record) {
+            return res.redirect("/notifications/list-notifications?error=Notification+non+attribuée");
+        }
 
+        if (!record.isRead) {
+            await record.update({ isRead: true, readAt: new Date() });
+        }
+
+        res.redirect("/notifications/list-notifications?success=Notification+marquée+comme+lue");
+
+    } catch (error) {
+        console.error(error);
+        res.redirect("/notifications/list-notifications?error=Erreur+serveur");
+    }
+};

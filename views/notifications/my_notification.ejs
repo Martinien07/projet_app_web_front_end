@@ -1,0 +1,104 @@
+<%- include("../partials/sidebar") %>
+</div>
+</div>
+
+<div id="main">
+<%- include("../partials/header") %>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Mes Notifications</h3>
+                <p class="text-subtitle text-muted">
+                    Notifications qui vous sont attribuées.
+                </p>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Mes Notifications</li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<section class="section">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Liste des notifications</h5>
+        </div>
+
+        <div class="card-body">
+
+            <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Message</th>
+                        <th>Portée</th>
+                        <th>Niveau</th>
+                        <th>Target</th>
+                        <th>Lu</th>
+                        <th>Date création</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% notifications.forEach(item => { %>
+                    <tr>
+                        <td><%= item.title %></td>
+                        <td><%= item.message %></td>
+                        <td><%= item.scope %></td>
+                        <td><%= item.level %></td>
+                        <td><%= item.target %></td>
+                        <td>
+                            <% if (item.NotificationRecipients[0].isRead) { %>
+                                <span class="badge bg-success">Oui</span>
+                            <% } else { %>
+                                <span class="badge bg-warning">Non</span>
+                            <% } %>
+                        </td>
+                        <td><%= new Date(item.createdAt).toLocaleDateString("fr-CA") %></td>
+                        <td>
+                            <a href="/notifications/<%= item.id %>" class="btn btn-sm btn-info">Voir</a>
+                            <% if (!item.NotificationRecipients[0].isRead) { %>
+                                <a href="/notifications/read/<%= item.id %>" class="btn btn-sm btn-success">Marquer comme lu</a>
+                            <% } %>
+                            <a href="/notifications/delete/<%= item.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette notification ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</section>
+
+<%- include("../partials/footer") %>
+
+</div>
+</div>
+
+<script src="../../assets/static/js/components/dark.js"></script>
+<script src="../../assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="../../assets/compiled/js/app.js"></script>
+
+<script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
+<script src="../../assets/static/js/pages/simple-datatables.js"></script>
+
+</body>
+</html>
