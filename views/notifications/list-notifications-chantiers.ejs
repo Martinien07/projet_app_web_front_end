@@ -10,15 +10,17 @@
         <div class="row">
 
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Toutes les notifications</h3>
-                <p class="text-subtitle text-muted">Liste de toutes les notifications enregistrées dans le système</p>
+                <h3>Notifications de mes chantiers</h3>
+                <p class="text-subtitle text-muted">
+                    Notifications liées aux chantiers sur lesquels vous êtes ou avez été affecté.
+                </p>
             </div>
 
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Notifications</li>
+                        <li class="breadcrumb-item active" aria-current="page">Mes Chantiers</li>
                     </ol>
                 </nav>
             </div>
@@ -30,11 +32,7 @@
         <div class="card">
 
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Gestion des notifications</h5>
-
-                <a href="/notifications/create_form" class="btn btn-primary">
-                    <i class="bi bi-plus-circle-fill"></i> Ajouter une notification
-                </a>
+                <h5 class="card-title">Notifications liées à vos chantiers</h5>
             </div>
 
             <div class="card-body">
@@ -47,12 +45,20 @@
                     <div class="alert alert-success"><%= success %></div>
                 <% } %>
 
+                <% if (notifications.length === 0) { %>
+                    <div class="alert alert-info">
+                        Vous n'avez aucune notification provenant des chantiers auxquels vous êtes affecté.
+                    </div>
+                <% } %>
+
+                <% if (notifications.length > 0) { %>
                 <table class="table table-striped" id="table1">
                     <thead>
                         <tr>
                             <th>Titre</th>
                             <th>Message</th>
-                            <th>Priorité</th>
+                            <th>Chantier</th>
+                            <th>Statut de lecture</th>
                             <th>Créée le</th>
                             <th>Actions</th>
                         </tr>
@@ -69,36 +75,45 @@
                             </td>
 
                             <td>
-                                <% if (notification.priority === 'high') { %>
-                                    <span class="badge bg-danger">Haute</span>
-                                <% } else if (notification.priority === 'medium') { %>
-                                    <span class="badge bg-warning text-dark">Moyenne</span>
+                                <span class="badge bg-primary">
+                                    Chantier #<%= notification.target %>
+                                </span>
+                            </td>
+
+                            <td>
+                                <% 
+                                   const rec = notification.NotificationRecipients.find(r => r.recipientId === user.id);
+                                %>
+
+                                <% if (rec && rec.isRead) { %>
+                                    <span class="badge bg-success">Lu</span>
                                 <% } else { %>
-                                    <span class="badge bg-secondary">Faible</span>
+                                    <span class="badge bg-warning text-dark">Non lu</span>
                                 <% } %>
                             </td>
 
                             <td><%= new Date(notification.createdAt).toLocaleDateString("fr-CA") %></td>
 
                             <td>
-  
-
-                                <a href="/notifications/edit/<%= notification.id %>" class="btn btn-primary">
-                                    <i class="bi bi-pen-fill"></i>
+                                <a href="/notifications/details/<%= notification.id %>" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye-fill"></i>
                                 </a>
 
-                                <a href="/notifications/delete/<%= notification.id %>" class="btn btn-danger btn-delete">
-                                    <i class="bi bi-trash-fill"></i>
+                                <% if (!rec || !rec.isRead) { %>
+                                <a href="/notifications/read/<%= notification.id %>" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check2-circle"></i>
                                 </a>
+                                <% } %>
                             </td>
 
                         </tr>
                         <% }) %>
                     </tbody>
-
                 </table>
+                <% } %>
 
             </div>
+
         </div>
     </section>
 </div>
@@ -114,16 +129,6 @@
 
 <script src="../../assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
 <script src="../../assets/static/js/pages/simple-datatables.js"></script>
-
-<script>
-document.addEventListener("click", function (e) {
-    if (e.target.closest(".btn-delete")) {
-        if (!confirm("Voulez-vous vraiment supprimer cette notification ?")) {
-            e.preventDefault();
-        }
-    }
-});
-</script>
 
 </body>
 </html>

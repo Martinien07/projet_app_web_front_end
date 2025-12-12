@@ -4,12 +4,15 @@ import express from "express";
 import {
     addNotification,
     getAllNotifications,
-    getNotificationById,
+    getNotificationDetails,
     showAddNotificationForm,
     showEditNotificationForm,
     updateNotification,
     deleteNotification,
-    markNotificationAsRead
+    markNotificationAsRead,
+    getUserChantierNotifications,
+    getAllNotificationsById
+    
 } from "../controllers/notificationController.js";
 
 import { isAuthenticated } from "../middlewares/authSession.js";
@@ -22,10 +25,12 @@ const router = express.Router();
 /* -------------------------------
    Liste de toutes les notifications
 --------------------------------*/
+router.get("/mine", isAuthenticated, getAllNotificationsById);
+
+
 router.get("/list-notifications", isAuthenticated, getAllNotifications);
 
-
-
+router.get("/sites", isAuthenticated, getUserChantierNotifications);
 
 /* -------------------------------
    FORMULAIRE : Ajouter une notification
@@ -43,10 +48,14 @@ router.post("/create",
 );
 
 
+
+// Route pour afficher les détails d’une notification
+router.get("/:id", isAuthenticated, getNotificationDetails);
+
 /* -------------------------------
    Détails d’une notification
 --------------------------------*/
-router.get("/details/:id", isAuthenticated, getNotificationById);
+router.get("/details/:id", isAuthenticated, getNotificationDetails);
 
 /* -------------------------------
    FORMULAIRE : Modifier une notification

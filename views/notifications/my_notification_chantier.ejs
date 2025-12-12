@@ -80,7 +80,10 @@
                             <% if (!item.NotificationRecipients[0].isRead) { %>
                                 <a href="/notifications/read/<%= item.id %>" class="btn btn-sm btn-success">Marquer comme lu</a>
                             <% } %>
+
+                            <% if (user && user.access === 1) { %>
                             <a href="/notifications/delete/<%= item.id %>" class="btn btn-sm btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette notification ?')">Supprimer</a>
+                                 <% } %>
                         </td>
                     </tr>
                     <% }) %>

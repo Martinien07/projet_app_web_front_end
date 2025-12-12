@@ -33,7 +33,7 @@ export const addNotification = async (req, res) => {
         if (!title || !message || !scope) {
             req.session.notificationErrors = [{ msg: "title, message et scope sont requis" }];
             req.session.notificationOld = req.body;
-            return res.redirect("/notification/list-notification?error=title+message+scope+requis");
+            return res.redirect("/notifications/create_form");
         }
 
         const finalLevel = level || "all";
@@ -165,7 +165,8 @@ export const getAllNotifications = async (req, res) => {
 ---------------------------------------------- */
 export const getAllNotificationsById = async (req, res) => {
     try {
-        const userId = req.user.id;
+            const userId = req.session.user.id;
+
 
         // Récupérer notifications assignées à l'utilisateur
         const notifications = await Notification.findAll({
@@ -179,7 +180,7 @@ export const getAllNotificationsById = async (req, res) => {
             order: [["createdAt", "DESC"]]
         });
 
-        res.render("notifications/list-notifications", {
+        res.render("notifications/my_notification", {
             pageGroup: "notifications",
             title: "Liste des notifications",
             page: "Notifications",
@@ -201,30 +202,60 @@ export const getAllNotificationsById = async (req, res) => {
 /* ---------------------------------------------
    DÉTAILS D’UNE NOTIFICATION
 ---------------------------------------------- */
-export const getNotificationById = async (req, res) => {
+export const getNotificationDetails = async (req, res) => {
     try {
-        const notification = await Notification.findByPk(req.params.id, {
-            include: [{
-                model: NotificationRecipient,
-                as: "NotificationRecipients",
-                attributes: ["id", "userId", "isRead", "readAt"]
-            }]
+        const notificationId = req.params.id;
+        const userId = req.session.user?.id;
+
+        if (!userId) {
+            return res.redirect("/login?error=Session expirée");
+        }
+
+        // Récupérer la notification + destinataire
+        const notification = await Notification.findOne({
+            where: { id: notificationId },
+            include: [
+                {
+                    model: NotificationRecipient,
+                    as: "NotificationRecipients",
+                    where: { recipientId: userId },
+                    required: false
+                }
+            ]
         });
 
         if (!notification) {
-            return res.redirect("/notifications/list-notifications?error=Notification+introuvable");
+            return res.status(404).render("error/error-400", {
+                title: "Notification introuvable",
+                error: "Cette notification n'existe pas."
+            });
         }
 
-        res.render("notifications/details", {
-            notification,
+        // Trouver le destinataire actuel
+        const recipient = notification.NotificationRecipients?.[0] || null;
+
+        // Identifier le chantier associé (target = chantierId)
+        let chantierName = null;
+        if (notification.target) {
+            const chantier = await Chantier.findByPk(notification.target);
+            chantierName = chantier ? chantier.nomChantier : null;
+        }
+
+        res.render("notifications/detail-notification", {
             pageGroup: "notifications",
-            title: "Détails de la notification",
-            page: "Détails",
+            page: "notification-detail",
+            title: "Détail de la notification",
+            notification,
+            chantierName,
+            recipient
         });
 
     } catch (error) {
         console.error(error);
-        res.redirect("/notifications/list-notifications?error=Erreur+serveur");
+        res.status(500).render("error/error-400", {
+            title: "Erreur serveur",
+            error: error.message
+        });
     }
 };
 
@@ -300,27 +331,113 @@ export const deleteNotification = async (req, res) => {
 /* ---------------------------------------------
    MARQUER UNE NOTIFICATION COMME LUE
 ---------------------------------------------- */
+
 export const markNotificationAsRead = async (req, res) => {
     try {
-        const notificationId = req.params.id;
-        const recipientId = req.user.id;
+        const userId = req.session?.user?.id; // sécurisation
 
-        const record = await NotificationRecipient.findOne({
-            where: { notificationId, recipientId }
+        if (!userId) {
+            return res.redirect("/login?error=Session expirée");
+        }
+
+        const notificationId = req.params.id;
+
+        // Vérifier si une ligne existe dans NotificationRecipient
+        const recipient = await NotificationRecipient.findOne({
+            where: {
+                notificationId,
+                recipientId: userId
+            }
         });
 
-        if (!record) {
-            return res.redirect("/notifications/list-notifications?error=Notification+non+attribuée");
+        if (!recipient) {
+            return res.redirect("/notifications/chantiers?error=Aucune notification trouvée pour cet utilisateur");
         }
 
-        if (!record.isRead) {
-            await record.update({ isRead: true, readAt: new Date() });
-        }
+        // Mise à jour
+        await recipient.update({
+            isRead: true,
+            readAt: new Date()
+        });
 
-        res.redirect("/notifications/list-notifications?success=Notification+marquée+comme+lue");
+        res.redirect(`/notifications/${notificationId}?success=Notification marquée comme lue`);
 
     } catch (error) {
         console.error(error);
-        res.redirect("/notifications/list-notifications?error=Erreur+serveur");
+        res.status(500).redirect("/notifications/chantiers?error=Erreur serveur");
+    }
+};
+
+
+
+
+/* ----------------------------------------------------
+   LISTE DES NOTIFICATIONS LIÉES AUX CHANTIERS DE L'UTILISATEUR
+------------------------------------------------------- */
+export const getUserChantierNotifications = async (req, res) => {
+    try {
+        const userId = req.user.id; // ID de l'utilisateur connecté
+
+        // Vérifier si l'utilisateur est connecté
+        if (!userId) {
+            return res.status(401).render("error/error-400", {
+                page: "error-400",
+                title: "Utilisateur non authentifié",
+                error: "Vous devez être connecté pour voir vos notifications."
+            });
+        }
+
+        //  Récupérer les chantiers auxquels l'utilisateur est affecté
+        const chantiersAffectes = await Affectation.findAll({
+            where: { userId },
+            attributes: ["chantierId"]
+        });
+
+        if (chantiersAffectes.length === 0) {
+            return res.render("notifications/list-notifications-chantiers", {
+                pageGroup: "notifications",
+                title: "Notifications de mes chantiers",
+                page: "notifications_chantiers",
+                notifications: [],
+                error: null,
+                success: "Vous n'êtes affecté à aucun chantier."
+            });
+        }
+
+        const chantierIds = chantiersAffectes.map(a => a.chantierId);
+
+        //  Récupérer toutes les notifications liées à ces chantiers
+        const notifications = await Notification.findAll({
+            where: {
+                target: chantierIds,      // notifications ciblant ces chantiers
+                scope: "chantier"         // notifications de type chantier
+            },
+            include: [
+                {
+                    model: NotificationRecipient,
+                    as: "NotificationRecipients",
+                    attributes: ["recipientId", "isRead", "readAt"]
+                }
+            ],
+            order: [["createdAt", "DESC"]]
+        });
+
+        //  Afficher la vue
+        res.render("notifications/list-notifications-chantiers", {
+            pageGroup: "notifications",
+            title: "Notifications des chantiers",
+            page: "notifications_chantiers",
+            notifications,
+            error: req.query.error || null,
+            success: req.query.success || null
+        });
+
+    } catch (error) {
+        console.error("Erreur récupération notifications chantiers :", error);
+        res.status(500).render("error/error-400", {
+            page: "error-400",
+            title: "Erreur serveur",
+            error: error.message
+        });
     }
 };
