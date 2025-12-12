@@ -12,7 +12,6 @@ router.post('/add-user', userValidationRules(), validateUser, addUser);
 
 
 
-
 // Créer
 router.get("/create_form", isAuthenticated, newUserPage);
 router.post("/create", isAuthenticated, createUser);
@@ -32,8 +31,6 @@ router.post("/update/:id", isAuthenticated, updateUser);
 
 // Supprimer
 router.get("/delete/:id", isAuthenticated, deleteUser);
-
-
 
 
 

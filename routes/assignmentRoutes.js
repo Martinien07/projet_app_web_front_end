@@ -3,27 +3,33 @@ import express from 'express';
 
 
 
-import { getAllAssignments, addAssignment, getAssignmentById, updateAssignment, deleteAssignment } from '../controllers/assignmentController.js';
+import { getAllAssignments, addAssignment, getAssignmentById, updateAssignment, deleteAssignment, listChantiersOfConnectedUser } from '../controllers/assignmentController.js';
 import { validateAssignment, validateAssignmentUpdate } from '../validations/assignmentValidator.js';
+import { isAuthenticated } from "../middlewares/authSession.js";
 
-
-import { protect } from '../middlewares/authMiddleware.js';
 const router = express.Router();
 //Route pour recuperer tous les assignments
-router.get('/',protect, getAllAssignments);
+router.get('/',isAuthenticated, getAllAssignments);
 
 //Route pour ajouter un assignments
-router.post('/',protect, validateAssignment, addAssignment);
+router.post('/',isAuthenticated, validateAssignment, addAssignment);
+
+
+// Liste des chantiers d'un utilisateur connecté
+
+router.get("/my-chantiers", isAuthenticated, listChantiersOfConnectedUser);
+
 
 //Route pour recuperer un assignments par userId
-router.get('/:userId',protect, getAssignmentById);
+router.get('/:userId',isAuthenticated, getAssignmentById);
 //Route pour modifier un assignments
 
-router.put('/:userId',protect,validateAssignmentUpdate, updateAssignment);
+router.put('/:userId',isAuthenticated,validateAssignmentUpdate, updateAssignment);
 
 
 //Route pour supprimer un assignments
-router.delete('/:id',protect, deleteAssignment);
+router.delete('/:id',isAuthenticated, deleteAssignment);
+
 
 
 export default router;

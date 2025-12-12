@@ -97,34 +97,34 @@ app.get('/', (req, res) => {
 // app.use('/api/as', userRoutes);
 
 //Route pour les inspections
-app.use('/api/inspection', inspectionRoutes);
+app.use('/inspection', inspectionRoutes);
 
 
 //Route pour les assignement à partir de assignmentRoutes.js
-app.use('/api/assignment', assignmentRoutes);
+app.use('/assignment', assignmentRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
 app.use('/users', userRoutes);
 
 //Route pour les utilisateurs à partir de userRoutes.js
-app.use('/api/notification', notificationRoutes);
+app.use('/notification', notificationRoutes);
 
 //Route pour l'authentification à partir de authRoutes.js
 app.use('/auth', authRoutes);
 
 //Route pour les actions admin à partir de adminRoutes.js
-app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 
 
 // Route pour les chantiers à partir de chantierRoutes.js
-app.use('/api/chantiers', chantierRoutes);
+app.use('/chantiers', chantierRoutes);
 
 // Route pour les incidents à partir de incidentRoutes.js
-app.use('/api/incidents', incidentRoutes);
+app.use('/incidents', incidentRoutes);
 
 
 //Route pour les roles à partir de roleRoutes.js
-app.use('/api/role', roleRoutes );
+app.use('/roles', roleRoutes );
 
 
 //Demarrer le serveur
